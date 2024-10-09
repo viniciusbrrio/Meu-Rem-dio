@@ -1,0 +1,40 @@
+<ion-header [translucent]="true">
+  <ion-toolbar style="--background: #20A0B1;">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Painel de Saúde</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content id="main-content" [fullscreen]="true">
+
+  <!-- Verifica se o utilizador foi carregado -->
+  <ng-container *ngIf="user; else notFound">
+    <h1> Bem-vindo, {{ user.nome }}!</h1>
+    <!-- Exibe outros dados do utilizador -->
+  </ng-container>
+  
+  <!-- Caso o utilizador não tenha sido encontrado -->
+  <ng-template #notFound>
+    <p>Utilizador não encontrado.</p>
+  </ng-template>
+
+  <!-- Grid de cards com opções -->
+  <div class="card-grid">
+    
+    <ion-card style="--background: #167D7F;" *ngFor="let item of items" 
+              [routerLink]="[item.title === 'Remédios' ? '/medicamentos' : item.title === 'Receitas' ? '/receitas' : '/outro', user?.id]">
+      <ion-card-header>
+        <ion-card-title>{{ item.title }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="ion-text-center">
+      </ion-card-content>
+    </ion-card>
+    
+  </div>
+
+</ion-content>

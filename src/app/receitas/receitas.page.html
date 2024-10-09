@@ -1,0 +1,52 @@
+<ion-header [translucent]="true">
+  <ion-toolbar style="--background: #20A0B1;">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Receitas</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/Painel:id"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Carregar Nova Receita</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <!-- Botão para fazer upload de uma receita -->
+      <ion-button expand="block" (click)="uploadRecipe()">Carregar Receita</ion-button>
+
+      <!-- Exibir imagem da receita após o upload -->
+      <img *ngIf="recipeImage" [src]="recipeImage" alt="Imagem da Receita" class="recipe-image"/>
+
+
+      <ion-button expand="block" (click)="goToReceitas()">Controle de Receitas</ion-button>
+
+
+      <!-- Definir validade da receita -->
+      <ion-item>
+        <ion-label>Validade</ion-label>
+        <ion-datetime [(ngModel)]="recipeValidity" placeholder="Selecione a validade"></ion-datetime>
+      </ion-item>
+
+      <!-- Salvar Receita -->
+      <ion-button expand="block" (click)="saveRecipe()">Salvar Receita</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Listar Receitas Anteriores -->
+  <ion-list>
+    <ion-item *ngFor="let recipe of recipes">
+      <ion-thumbnail slot="start">
+        <img [src]="recipe.image" />
+      </ion-thumbnail>
+      <ion-label>
+        <h2>Validade: {{ recipe.validity }}</h2>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

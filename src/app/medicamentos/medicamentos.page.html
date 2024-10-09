@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar style="--background: #20A0B1;">
+    <ion-title>Remédios - {{ user?.nome }}</ion-title>
+
+    <!-- Botão de Voltar -->
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/painel:id"></ion-back-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let medicamento of medicamentos">
+      <ion-label>
+        <h2>{{ medicamento.nome }}</h2>
+        <p>{{ medicamento.tipo }}</p>
+        <p>{{ medicamento.dosagem }} de {{ medicamento.qnt }}/{{ medicamento.qnt }} hrs.</p>
+        <p>Durante {{ medicamento.dias }} dias.</p>
+        <p>Início do tratamento: {{ medicamento.horario }}</p>
+      </ion-label>
+      <ion-button (click)="cancelarTarefa(medicamento)">Finalizar</ion-button>
+      
+    </ion-item>
+  </ion-list>
+
+  <!-- Botão flutuante para adicionar medicamento -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button style="--background: #20A0B1;" (click)="openAddMedicamentoModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
+

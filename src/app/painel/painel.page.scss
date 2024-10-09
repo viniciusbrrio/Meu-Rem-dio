@@ -1,0 +1,30 @@
+.card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  ion-card {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    text-align: center;
+    
+  }
+
+  ion-card-title{
+    display: flex;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+  }
+
+  .ion-card-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

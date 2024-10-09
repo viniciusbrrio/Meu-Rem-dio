@@ -1,0 +1,33 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  ion-card {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .signup-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    font-size: 14px;
+  }
+  
+  .signup-link ion-text {
+    margin-right: 8px; /* Espaçamento entre o texto e o botão */
+  }
+  
+  .signup-link ion-button {
+    --padding-start: 0;
+    --padding-end: 0;
+    font-weight: bold;
+    color: var(--ion-color-primary);
+  }
+  
+  
+  

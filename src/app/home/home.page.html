@@ -1,20 +1,60 @@
+<ion-menu side="start" menuId="first" contentId="main-content">
+  <ion-header>
+    <ion-toolbar style="--background: #20A0B1;">
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item routerLink="/home">Home</ion-item>
+      <ion-item routerLink="/perfil">Perfil</ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+  <ion-toolbar style="--background: #20A0B1;">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Meu Remédio</ion-title>
+    
+    <ion-buttons slot="end">
+      <ion-button routerLink="/perfil">
+        <ion-icon name="person-circle"></ion-icon>
+      </ion-button>
+      <ion-img src="/assets/imagem/logo1.png" style="width: 40px; height: 40px;"></ion-img>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content id="main-content">
+  <ion-fab slot="fixed" horizontal="end" vertical="bottom">
+    <ion-fab-button style="--background: #20A0B1;" (click)="openAddUserModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <!-- Lista de usuários -->
+  <ion-list>
+    <ion-card *ngFor="let user of users" style="background-color: rgb(188, 215, 240);">
+      <ion-card-header (click)="goToUserPanel(user)">
+        <ion-card-title style="color: black;">{{ user.nome }}</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="9">
+            <div>Idade: {{ user.idade }}</div>
+          </ion-col>
+          <ion-col size="3">
+            <ion-button expand="block" color="danger" (click)="confirmDeleteUser(user)">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
 </ion-content>

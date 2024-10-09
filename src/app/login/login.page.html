@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="login-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Iniciar Sessão</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="email" formControlName="email" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Password</ion-label>
+            <ion-input type="password" formControlName="password" required></ion-input>
+          </ion-item>
+
+          <ion-button expand="full" type="submit" [disabled]="!loginForm.valid">Login</ion-button>
+        </form>
+
+      </ion-card-content>
+
+              <!-- Adicionando o link para a página de cadastro -->
+              <div class="signup-link">
+                <ion-text>Não tem uma conta?</ion-text>
+                <ion-button fill="clear" routerLink="/cadastro">Cadastre-se</ion-button>
+              </div>
+              
+    </ion-card>
+  </div>
+</ion-content>
+

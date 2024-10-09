@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar style="--background: #20A0B1;">
+    <ion-title>Adicionar Medicamento</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">Cancelar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="--background: #DDFFE7;">
+  <form [formGroup]="medicamentoForm" (ngSubmit)="addMedicamento()">
+    <ion-item>
+      <ion-label position="floating">Nome do Medicamento</ion-label>
+      <ion-input formControlName="nome" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Tipo</ion-label>
+      <ion-select formControlName="tipo" required>
+        <ion-select-option value="comprimido">Comprimido (mg)</ion-select-option>
+        <ion-select-option value="xarope">Xarope (ml)</ion-select-option>
+        <ion-select-option value="injetavel">Injetar</ion-select-option>
+        <ion-select-option value="nebulizacao">Nebolizar</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Dosagem (mg/ml)</ion-label>
+      <ion-input formControlName="dosagem" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Intervalo de horário</ion-label>
+      <ion-input type="number" formControlName="qnt" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Dias de Tratamento</ion-label>
+      <ion-input type="number" formControlName="dias" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Data de Início</ion-label>
+      <ion-datetime formControlName="dataInicio" display-format="YYYY-MM-DD" picker-format="YYYY-MM-DD" required></ion-datetime>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label position="floating">Horário</ion-label>
+      <ion-datetime formControlName="horario" display-format="HH:mm" picker-format="HH:mm" required></ion-datetime>
+    </ion-item>
+
+    <ion-button expand="full" type="submit" [disabled]="!medicamentoForm.valid">
+      Adicionar
+    </ion-button>
+  </form>
+</ion-content>
+
