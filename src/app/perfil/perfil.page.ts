@@ -7,7 +7,6 @@ interface UserProfile {
   nome: string;
   sobrenome: string;
   email: string;
-  senha: string; // Note: It's not recommended to store passwords in plaintext
   dataNascimento: string;
   bairro: string;
   estado: string;
@@ -23,7 +22,6 @@ export class PerfilPage implements OnInit {
     nome: '',
     sobrenome: '',
     email: '',
-    senha: '',
     dataNascimento: '',
     bairro: '',
     estado: ''
@@ -39,10 +37,12 @@ export class PerfilPage implements OnInit {
     this.loadUserProfile();
   }
 
+  // Carrega os dados do perfil a partir da coleção "cadastro"
   async loadUserProfile() {
     const user = await this.auth.currentUser;
     if (user) {
-      this.firestore.collection('users').doc(user.uid).get().subscribe(
+      // Agora estamos a buscar os dados na coleção "cadastro"
+      this.firestore.collection('cadastro').doc(user.uid).get().subscribe(
         (doc) => {
           if (doc.exists) {
             const data = doc.data() as UserProfile;
@@ -50,7 +50,6 @@ export class PerfilPage implements OnInit {
               nome: data.nome || '',
               sobrenome: data.sobrenome || '',
               email: data.email || '',
-              senha: data.senha || '', // Again, not recommended to store or display passwords
               dataNascimento: data.dataNascimento || '',
               bairro: data.bairro || '',
               estado: data.estado || ''
@@ -58,27 +57,29 @@ export class PerfilPage implements OnInit {
           }
         },
         (error) => {
-          console.error('Error loading user profile:', error);
+          console.error('Erro ao carregar o perfil do usuário:', error);
           this.presentToast('Erro ao carregar o perfil do usuário.');
         }
       );
     }
   }
 
+  // Salva as alterações no perfil de utilizador na coleção "cadastro"
   async saveProfile() {
     const user = await this.auth.currentUser;
     if (user) {
-      this.firestore.collection('users').doc(user.uid).set(this.userProfile)
+      this.firestore.collection('cadastro').doc(user.uid).set(this.userProfile)
         .then(() => {
           this.presentToast('Perfil atualizado com sucesso!');
         })
         .catch((error) => {
-          console.error('Error updating profile:', error);
+          console.error('Erro ao atualizar o perfil:', error);
           this.presentToast('Erro ao atualizar o perfil.');
         });
     }
   }
 
+  // Exibe um toast com mensagens de sucesso ou erro
   async presentToast(message: string) {
     const toast = await this.toastController.create({
       message: message,
@@ -88,3 +89,4 @@ export class PerfilPage implements OnInit {
     toast.present();
   }
 }
+

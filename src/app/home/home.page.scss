@@ -32,5 +32,12 @@ ion-img{
 }
 
 #background {
-  --ion-background-color: #DDFFE7;
+  
+    --background: linear-gradient(135deg, #167D7F, #29A0B1, #98D7C2, #DDFFE7);
+  
+}
+
+.spacer {
+  color: white;
+  height: 15px; /* Espaçamento entre os campos */
 }

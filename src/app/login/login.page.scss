@@ -1,33 +1,85 @@
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-  
-  ion-card {
-    width: 100%;
-    max-width: 400px;
-  }
+ion-content {
+  --background: linear-gradient(135deg, #167D7F, #29A0B1, #98D7C2, #DDFFE7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
 
-  .signup-link {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 15px;
-    font-size: 14px;
-  }
-  
-  .signup-link ion-text {
-    margin-right: 8px; /* Espaçamento entre o texto e o botão */
-  }
-  
-  .signup-link ion-button {
-    --padding-start: 0;
-    --padding-end: 0;
-    font-weight: bold;
-    color: var(--ion-color-primary);
-  }
-  
-  
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 400px; /* Define uma largura máxima */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+img {
+  margin-top: 30px;
+  margin-bottom: 10px;
+  width: 200px;
+  height: 200px;
+}
+
+ion-card {
+  width: 100%;
+  max-width: 400px;
+  background: transparent;
+  box-shadow: none;
+  border: 2px solid rgba(32, 32, 34, 0.2); 
+}
+
+.signup-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.signup-link ion-text {
+  margin-right: 8px; /* Espaçamento entre o texto e o botão */
+}
+
+.signup-link ion-button {
+  --padding-start: 0;
+  --padding-end: 0;
+  font-weight: bold;
+  color: var(--ion-color-primary);
+}
+
+ion-label, ion-input {
+  background: transparent; /* Transforma o fundo dos inputs transparente */
+}
+
+/* Estilo dos campos de input e label */
+ion-item {
+  --background: transparent; /* Evita fundo no ion-item */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5); /* Borda inferior clara */
+}
+
+ion-label {
+  color: #DDFFE7; /* Torna o texto do label compatível com o fundo */
+  font-size: 1rem; /* Ajuste do tamanho da fonte */
+  font-weight: bold;
+}
+
+/* Cor do texto digitado nos campos de input */
+ion-input {
+  color: #DDFFE7; /* Cor branca esverdeada para combinar com o fundo */
+}
+
+.login {
+  --background: #167D7F;
+  --color: white;
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.8);
+}
+
+ion-text {
+  margin-right: 8px;
+}
+
   

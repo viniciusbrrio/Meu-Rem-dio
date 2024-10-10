@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavController, AlertController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/compat/auth'; // Firebase Auth
-import { AngularFirestore } from '@angular/fire/compat/firestore'; // Firestore
+import { CadastroService } from '../services/cadastro.service'; // Serviço de Cadastro
 
 @Component({
   selector: 'app-cadastro',
@@ -12,19 +12,24 @@ import { AngularFirestore } from '@angular/fire/compat/firestore'; // Firestore
 export class CadastroPage implements OnInit {
   registerForm!: FormGroup;
   passwordsDoNotMatch = false;
+  showCustomEstadoField: boolean = false; // Para mostrar o campo de estado manual
 
   constructor(
     private formBuilder: FormBuilder,
     private navCtrl: NavController,
     private alertController: AlertController,
     private afAuth: AngularFireAuth, // Injeção do Firebase Auth
-    private firestore: AngularFirestore // Injeção do Firestore
+    private cadastroService: CadastroService // Injeção do serviço de Cadastro
   ) {}
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
       nome: ['', Validators.required],
       sobrenome: ['', Validators.required],
+      dataNascimento: ['', Validators.required],
+      estado: ['', Validators.required],
+      customEstado: [''], // Campo para o estado manual
+      bairro: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(6)]],
       confirmarSenha: ['', Validators.required]
@@ -36,32 +41,59 @@ export class CadastroPage implements OnInit {
       const confirmarSenha = this.registerForm.get('confirmarSenha')?.value;
       this.passwordsDoNotMatch = senha !== confirmarSenha;
     });
+
+    // Monitorar mudanças no estado para exibir o campo "customEstado" quando "Outro" for selecionado
+    this.registerForm.get('estado')?.valueChanges.subscribe((value) => {
+      if (value === 'Outro') {
+        this.showCustomEstadoField = true;
+        this.registerForm.get('customEstado')?.setValidators(Validators.required);
+      } else {
+        this.showCustomEstadoField = false;
+        this.registerForm.get('customEstado')?.clearValidators();
+      }
+      this.registerForm.get('customEstado')?.updateValueAndValidity();
+    });
   }
 
   async onRegister() {
     if (this.registerForm.valid && !this.passwordsDoNotMatch) {
-      const { nome, sobrenome, email, senha } = this.registerForm.value;
+      const { nome, sobrenome, dataNascimento, bairro, email, senha } = this.registerForm.value;
+      const estado = this.registerForm.value.estado === 'Outro'
+        ? this.registerForm.value.customEstado
+        : this.registerForm.value.estado;
 
       try {
         // Criar utilizador no Firebase Authentication
         const userCredential = await this.afAuth.createUserWithEmailAndPassword(email, senha);
+        const userId = userCredential.user?.uid;
 
-        // Guardar dados adicionais no Firestore
-        await this.saveUserData(userCredential.user?.uid, nome, sobrenome, email);
+        if (userId) {
+          // Guardar dados adicionais no Firestore através do serviço
+          await this.cadastroService.addCadastro({
+            nome,
+            sobrenome,
+            dataNascimento,
+            estado,
+            bairro,
+            email,
+            senha,
+            userId
+          });
 
-        // Enviar e-mail de verificação
-        await this.sendVerificationEmail();
+          // Enviar e-mail de verificação
+          await this.sendVerificationEmail();
 
-        // Mostrar alerta de sucesso
-        const alert = await this.alertController.create({
-          header: 'Sucesso!',
-          message: 'Conta criada. Verifique o seu email para validar a conta.',
-          buttons: ['OK']
-        });
-        await alert.present();
+          // Mostrar alerta de sucesso
+          const alert = await this.alertController.create({
+            header: 'Sucesso!',
+            message: 'Conta criada. Verifique o seu email para validar a conta.',
+            buttons: ['OK']
+          });
+          await alert.present();
 
-        // Navegar para a página inicial ou qualquer outra página
-        this.navCtrl.navigateRoot('/login');
+          // Navegar para a página de login
+          this.navCtrl.navigateRoot('/login');
+        }
       } catch (error) {
         console.error('Erro ao criar conta:', error);
         const alert = await this.alertController.create({
@@ -74,23 +106,20 @@ export class CadastroPage implements OnInit {
     }
   }
 
-  // Função para salvar dados do utilizador no Firestore
-  async saveUserData(uid: string | undefined, nome: string, sobrenome: string, email: string) {
-    if (!uid) return;
-
-    const userData = {
-      nome,
-      sobrenome,
-      email
-    };
-
-    try {
-      // Armazenar os dados do utilizador no Firestore com o UID como documento
-      await this.firestore.collection('users').doc(uid).set(userData);
-    } catch (error) {
-      console.error('Erro ao salvar dados no Firestore:', error);
+  onEstadoChange(event: any) {
+    const selectedValue = event.detail.value;
+  
+    if (selectedValue === 'Outro') {
+      this.showCustomEstadoField = true;
+      this.registerForm.get('customEstado')?.setValidators(Validators.required);
+    } else {
+      this.showCustomEstadoField = false;
+      this.registerForm.get('customEstado')?.clearValidators();
     }
+  
+    this.registerForm.get('customEstado')?.updateValueAndValidity();
   }
+  
 
   // Enviar e-mail de verificação do Firebase Auth
   async sendVerificationEmail() {
@@ -100,17 +129,7 @@ export class CadastroPage implements OnInit {
       console.log('E-mail de verificação enviado.');
     }
   }
-
-  // Função para obter os dados do utilizador (opcional, Firestore ou Firebase Auth)
-  async getUserData() {
-    const user = await this.afAuth.currentUser;
-    if (user) {
-      const userData = await this.firestore.collection('users').doc(user.uid).get().toPromise();
-      if (userData?.exists) {
-        console.log('Dados do utilizador:', userData.data());
-      }
-    }
-  }
 }
+
 
 

@@ -1,20 +1,62 @@
+ion-content {
+  --background: linear-gradient(135deg, #167D7F, #29A0B1, #98D7C2, #DDFFE7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Garante que o conteúdo ocupe toda a altura da tela */
+}
+
 .register-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-  
-  ion-card {
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  ion-text {
-    font-size: 14px;
-  }
-  
-  ion-item {
-    margin-bottom: 15px;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 500px; /* Largura máxima do formulário */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+ion-card {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8); /* Card semi-transparente */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  border-radius: 12px; /* Bordas arredondadas */
+}
+
+ion-card-header,
+ion-card-title {
+  text-align: center; /* Centraliza o título */
+  color: #167D7F; /* Cor do título para combinar com o tema */
+}
+
+ion-item {
+  --background: transparent; /* Faz com que os inputs tenham fundo transparente */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2); /* Borda inferior leve */
+}
+
+ion-label {
+  color: #167D7F; /* Cor do texto do label */
+}
+
+ion-input {
+  color: #167D7F; /* Cor do texto inserido */
+}
+
+ion-button {
+  --background: #167D7F; /* Cor do botão */
+  --color: white; /* Cor do texto do botão */
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.8);
+  border-radius: 8px; /* Bordas arredondadas no botão */
+  margin-top: 20px;
+}
+
+.register-container ion-text {
+  font-size: 0.875rem;
+  color: red;
+}
+
+ion-select-option{
+  color: #167D7F;
+}
   

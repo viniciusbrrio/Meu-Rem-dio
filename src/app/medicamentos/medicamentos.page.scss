@@ -1,8 +1,87 @@
+ion-content {
+  --background: linear-gradient(135deg, #167D7F, #29A0B1, #98D7C2, #DDFFE7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+  
+  ion-title {
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  ion-back-button {
+    color: white;
+  }
+
+
+ion-content {
+  --background: linear-gradient(135deg, #167D7F, #29A0B1, #98D7C2, #DDFFE7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+}
+
+/* Estilização para a lista de medicamentos */
+ion-list {
+  width: 100%;
+  max-width: 500px; /* Define uma largura máxima para a lista */
+  background: rgba(255, 255, 255, 0.9); /* Fundo leve para destacar os itens */
+  border-radius: 10px; /* Bordas arredondadas */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  margin-bottom: 20px;
+}
+
 ion-item {
-    --border-color: var(--ion-color-primary);
+  --background: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Borda inferior leve */
+  padding: 10px;
+  color: #167D7F; /* Cor do texto dos itens */
+}
+  ion-label {
+    color: #167D7F;
+    font-size: 1rem;
   }
-  
+
+  h2 {
+    font-weight: bold;
+    color: #167D7F;
+    margin-bottom: 5px;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #555; /* Cor mais clara para informações secundárias */
+    margin: 0;
+  }
+
+  ion-button {
+    --background: #167D7F;
+    --color: white;
+    --border-radius: 8px;
+    font-weight: bold;
+    margin-left: 10px;
+  }
+
+
+/* Estilização para o botão flutuante */
+ion-fab-button {
+  --background: #20A0B1;
+  color: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Sombra suave */
+  --border-radius: 50%;
+}
+
+ion-icon {
+  font-size: 1.5rem; /* Tamanho maior do ícone */
+}
+
+ion-fab {
   ion-fab-button {
-    --background: var(--ion-color-danger);
+    width: 60px;
+    height: 60px;
   }
-  
+}

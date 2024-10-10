@@ -1,7 +1,5 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Cadastro</ion-title>
-  </ion-toolbar>
+ 
 </ion-header>
 
 <ion-content>
@@ -10,55 +8,108 @@
       <ion-card-header>
         <ion-card-title>Registar Conta</ion-card-title>
       </ion-card-header>
-      
+
       <ion-card-content>
         <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+          <!-- Nome -->
           <ion-item>
-            <ion-label position="floating">Nome</ion-label>
+            <ion-label style="color: #167D7F;" position="floating">Nome</ion-label>
             <ion-input formControlName="nome" required></ion-input>
           </ion-item>
           <div *ngIf="registerForm.controls['nome'].invalid && registerForm.controls['nome'].touched">
             <ion-text color="danger">O nome é obrigatório.</ion-text>
           </div>
 
+          <!-- Sobrenome -->
           <ion-item>
-            <ion-label position="floating">Sobrenome</ion-label>
+            <ion-label style="color: #167D7F;" position="floating">Sobrenome</ion-label>
             <ion-input formControlName="sobrenome" required></ion-input>
           </ion-item>
           <div *ngIf="registerForm.controls['sobrenome'].invalid && registerForm.controls['sobrenome'].touched">
             <ion-text color="danger">O sobrenome é obrigatório.</ion-text>
           </div>
 
+          <!-- Email -->
           <ion-item>
-            <ion-label position="floating">Email</ion-label>
+            <ion-label style="color: #167D7F;" position="floating">Email</ion-label>
             <ion-input type="email" formControlName="email" required></ion-input>
           </ion-item>
           <div *ngIf="registerForm.controls['email'].invalid && registerForm.controls['email'].touched">
             <ion-text color="danger">Por favor insira um email válido.</ion-text>
           </div>
 
+          <!-- Data de Nascimento -->
           <ion-item>
-            <ion-label position="floating">Senha</ion-label>
+            <ion-label style="color: #167D7F;" position="floating">Data de Nascimento</ion-label>
+            <ion-datetime displayFormat="DD/MM/YYYY" formControlName="dataNascimento" required></ion-datetime>
+          </ion-item>
+          <div *ngIf="registerForm.controls['dataNascimento'].invalid && registerForm.controls['dataNascimento'].touched">
+            <ion-text color="danger">A data de nascimento é obrigatória.</ion-text>
+          </div>
+
+          <!-- Estado com a opção "Outro" -->
+          <ion-item>
+            <ion-label style="color: #167D7F;" position="floating">Estado</ion-label>
+            <ion-select style="color: #167D7F;" formControlName="estado" placeholder="Selecione o Estado" (ionChange)="onEstadoChange($event)" required>
+              <ion-select-option value="Rj">Rio de Janeiro</ion-select-option>
+              <ion-select-option value="Mg">Minas Gerais</ion-select-option>
+              <ion-select-option value="Es">Espirito Santo</ion-select-option>
+              <ion-select-option value="Sp">São Paulo</ion-select-option>
+              <ion-select-option value="Outro">Outro</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <div *ngIf="registerForm.controls['estado'].invalid && registerForm.controls['estado'].touched">
+            <ion-text color="danger">O estado é obrigatório.</ion-text>
+          </div>
+
+          <!-- Campo para adicionar manualmente o estado se "Outro" for selecionado -->
+          <ion-item *ngIf="showCustomEstadoField">
+            <ion-label style="color: #167D7F;" position="floating">Digite seu Estado</ion-label>
+            <ion-input formControlName="customEstado" required></ion-input>
+          </ion-item>
+          <div *ngIf="registerForm.controls['customEstado']?.invalid && registerForm.controls['customEstado']?.touched && showCustomEstadoField">
+            <ion-text color="danger">O estado é obrigatório.</ion-text>
+          </div>
+
+          <!-- Bairro -->
+          <ion-item>
+            <ion-label style="color: #167D7F;" position="floating">Bairro</ion-label>
+            <ion-input formControlName="bairro" required></ion-input>
+          </ion-item>
+          <div *ngIf="registerForm.controls['bairro'].invalid && registerForm.controls['bairro'].touched">
+            <ion-text color="danger">O bairro é obrigatório.</ion-text>
+          </div>
+
+          <!-- Senha -->
+          <ion-item>
+            <ion-label style="color: #167D7F;" position="floating">Senha</ion-label>
             <ion-input type="password" formControlName="senha" required></ion-input>
           </ion-item>
           <div *ngIf="registerForm.controls['senha'].invalid && registerForm.controls['senha'].touched">
             <ion-text color="danger">A senha é obrigatória (mínimo 6 caracteres).</ion-text>
           </div>
 
+          <!-- Confirmar Senha -->
           <ion-item>
-            <ion-label position="floating">Confirmar Senha</ion-label>
+            <ion-label style="color: #167D7F;" position="floating">Confirmar Senha</ion-label>
             <ion-input type="password" formControlName="confirmarSenha" required></ion-input>
           </ion-item>
           <div *ngIf="passwordsDoNotMatch">
             <ion-text color="danger">As senhas não coincidem.</ion-text>
           </div>
 
+          <!-- Botão de Enviar -->
           <ion-button expand="full" type="submit" [disabled]="!registerForm.valid || passwordsDoNotMatch">
             Enviar
+          </ion-button>
+          <ion-button expand="full" fill="clear" routerLink="/login">
+            Voltar
           </ion-button>
         </form>
       </ion-card-content>
     </ion-card>
   </div>
 </ion-content>
+
+
 
