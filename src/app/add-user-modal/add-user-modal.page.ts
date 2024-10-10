@@ -38,8 +38,8 @@ export class AddUserModalPage implements OnInit {
       const id = this.firestore.createId(); // Gera um ID único para o utilizador
 
       try {
-        // Adicionar o utilizador à coleção "users" no Firestore
-        await this.firestore.collection('users').doc(id).set({ ...userData, id });
+        /* Adicionar o utilizador à coleção "users" no Firestore
+        await this.firestore.collection('users').doc(id).set({ ...userData, id });*/
 
         // Fechar o modal e enviar os dados de volta sem sobrescrever o campo id
         await this.modalController.dismiss(userData); // Agora apenas userData será enviado, sem duplicação de 'id'

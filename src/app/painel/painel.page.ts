@@ -17,7 +17,6 @@ export class PainelPage implements OnInit {
     { title: 'Pressão' },
     { title: 'Glicose' },
     { title: 'Receitas' },
-    { title: 'Agenda' },
     { title: 'Histórico' },
     { title: 'Consultas' }
   ];

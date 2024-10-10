@@ -5,6 +5,7 @@ import { UserService } from '../services/user.service';
 import { User } from '../models/user.model';
 import { AngularFirestore } from '@angular/fire/compat/firestore'; // Importar Firestore para integração com o Firebase
 import { firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -16,9 +17,10 @@ export class HomePage implements OnInit {
 
   constructor(
     private modalController: ModalController,
+    private alertController: AlertController,
     private userService: UserService,
     private firestore: AngularFirestore,
-    private alertController: AlertController
+    private router: Router // Injetar Router
   ) {}
 
   async ngOnInit() {
@@ -61,8 +63,11 @@ export class HomePage implements OnInit {
 
   // Ir para o painel do utilizador
   goToUserPanel(user: User) {
-    // Aqui você pode redirecionar para a página do painel do utilizador
-    console.log('Navegar para o painel do utilizador', user);
+    if (user && user.id) {
+      this.router.navigate(['/painel', user.id]);
+    } else {
+      console.error('Usuário inválido ou ID ausente');
+    }
   }
 
   // Confirmar exclusão do utilizador

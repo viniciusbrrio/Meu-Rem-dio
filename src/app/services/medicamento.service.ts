@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 interface Medicamento {
   nome: string;
@@ -16,47 +18,45 @@ interface Medicamento {
   providedIn: 'root',
 })
 export class MedicamentoService {
-  private storageKey = 'medicamentos';
+  private collectionName = 'medicamentos';
 
-  constructor(private storage: Storage) {
-    this.init();
-  }
+  constructor(private firestore: AngularFirestore) {}
 
-  async init() {
-    await this.storage.create();
-  }
-
+  // Adiciona um novo medicamento ao Firestore
   async addMedicamento(medicamento: Medicamento): Promise<void> {
-    const medicamentos = await this.getMedicamentos(medicamento.userId);
-    medicamentos.push(medicamento);
-    await this.saveMedicamentos(medicamento.userId, medicamentos);
+    const medicamentosCollection = this.firestore.collection<Medicamento>(this.collectionName);
+    await medicamentosCollection.add(medicamento);
   }
 
-  async getMedicamentos(userId: string): Promise<Medicamento[]> {
-    const medicamentosStr = await this.storage.get(this.storageKey);
-    const medicamentos = medicamentosStr ? JSON.parse(medicamentosStr) : [];
-    return medicamentos.filter((medicamento: Medicamento) => medicamento.userId === userId);
+  // Retorna os medicamentos de um utilizador específico
+  getMedicamentos(userId: string): Observable<Medicamento[]> {
+    return this.firestore
+      .collection<Medicamento>(this.collectionName, ref => ref.where('userId', '==', userId))
+      .snapshotChanges()
+      .pipe(
+        map(actions =>
+          actions.map(a => {
+            const data = a.payload.doc.data() as Medicamento;
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          })
+        )
+      );
   }
 
-  async removeMedicamento(nome: string, userId: string): Promise<void> {
-    const medicamentos = await this.getMedicamentos(userId);
-    const medicamentosFiltrados = medicamentos.filter(med => med.nome !== nome || med.userId !== userId);
-    await this.saveMedicamentos(userId, medicamentosFiltrados);
+  // Remove um medicamento com base no nome e no userId
+  async removeMedicamento(id: string): Promise<void> {
+    const medicamentoDoc = this.firestore.doc(`${this.collectionName}/${id}`);
+    await medicamentoDoc.delete();
   }
 
-  async marcarComoConcluida(nome: string, userId: string): Promise<void> {
-    const medicamentos = await this.getMedicamentos(userId);
-    const medicamentoIndex = medicamentos.findIndex(med => med.nome === nome && med.userId === userId);
-    if (medicamentoIndex !== -1) {
-      medicamentos[medicamentoIndex].concluido = true;
-      await this.saveMedicamentos(userId, medicamentos);
-    }
-  }
-
-  private async saveMedicamentos(userId: string, medicamentos: Medicamento[]) {
-    await this.storage.set(this.storageKey, JSON.stringify(medicamentos));
+  // Marca um medicamento como concluído
+  async marcarComoConcluida(id: string): Promise<void> {
+    const medicamentoDoc = this.firestore.doc(`${this.collectionName}/${id}`);
+    await medicamentoDoc.update({ concluido: true });
   }
 }
+
 
 
 

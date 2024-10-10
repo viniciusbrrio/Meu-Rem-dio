@@ -19,12 +19,9 @@ const routes: Routes = [
     path: 'painel/:id',
     loadChildren: () => import('./painel/painel.module').then( m => m.PainelPageModule)
   },
-  /*{
-    path: 'painel',
-    loadChildren: () => import('./painel/painel.module').then( m => m.PainelPageModule)
-  },*/
+
   {
-    path: 'perfil',
+    path: 'perfil/:id',
     loadChildren: () => import('./perfil/perfil.module').then( m => m.PerfilPageModule)
   },
   {

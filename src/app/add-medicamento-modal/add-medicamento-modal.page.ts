@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MedicamentoService } from '../services/medicamento.service';
 import { User } from '../models/user.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-add-medicamento-modal',
@@ -13,7 +14,7 @@ import { User } from '../models/user.model';
 export class AddMedicamentoModalPage implements OnInit {
   medicamentoForm!: FormGroup;
   user!: User; // Certifique-se que o user está corretamente inicializado
-  medicamentos: any[] = []; // Variável para armazenar os medicamentos
+  medicamentos$: Observable<any[]> | undefined; // Use um Observable para medicamentos
 
   constructor(
     private modalController: ModalController,
@@ -21,20 +22,21 @@ export class AddMedicamentoModalPage implements OnInit {
     private medicamentoService: MedicamentoService
   ) {}
 
-  async ngOnInit() {
+  ngOnInit() {
+    // Inicializar o formulário com validação
     this.medicamentoForm = this.formBuilder.group({
       nome: ['', Validators.required],
       tipo: ['', Validators.required],
       dosagem: ['', Validators.required],
-      qnt: ['', Validators.required],
+      qnt: ['', [Validators.required, Validators.min(1)]],
       dias: ['', [Validators.required, Validators.min(1)]],
       horario: ['', Validators.required]
     });
 
-    // Verifique se o `user` foi inicializado corretamente antes de buscar os medicamentos
+    // Verificar se o `user` está corretamente inicializado
     if (this.user && this.user.id) {
-      // Atualiza a lista com os medicamentos salvos
-      this.medicamentos = await this.medicamentoService.getMedicamentos(this.user.id);
+      // Atualiza a lista com os medicamentos associados ao usuário, através de um Observable
+      this.medicamentos$ = this.medicamentoService.getMedicamentos(this.user.id);
     } else {
       console.error("O usuário não está definido ou o ID está ausente.");
     }
@@ -58,9 +60,6 @@ export class AddMedicamentoModalPage implements OnInit {
         await this.medicamentoService.addMedicamento(medicamento);
         console.log('Medicamento adicionado com sucesso:', medicamento);
         
-        // Atualiza a lista local de medicamentos
-        this.medicamentos.push(medicamento);
-        
         // Fechar o modal e passar os dados do novo medicamento
         this.modalController.dismiss(medicamento);
       } catch (error) {
@@ -71,6 +70,7 @@ export class AddMedicamentoModalPage implements OnInit {
     }
   }
 }
+
 
 
 

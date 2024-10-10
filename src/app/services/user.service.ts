@@ -24,7 +24,7 @@ export class UserService {
     return this.firestore.collection(this.collectionName).doc(id).set({ ...user, id });
   }
 
-  // Obter utilizador pelo ID
+   // Obter utilizador pelo ID
   getUserById(id: string): Observable<User | undefined> {
     return this.firestore.collection<User>(this.collectionName).doc(id).valueChanges();
   }

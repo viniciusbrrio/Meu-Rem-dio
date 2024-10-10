@@ -7,16 +7,16 @@ import { UserService } from '../services/user.service';
 import { MedicamentoService } from '../services/medicamento.service';
 import { User } from '../models/user.model';
 import { AngularFirestore } from '@angular/fire/compat/firestore'; // Firebase Firestore
-import { firstValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 
 interface Medicamento {
-  id?: string; // Adicionar ID opcional para uso no Firestore
+  id?: string; // ID opcional do Firestore
   nome: string;
   tipo: string;
   dosagem: string;
   qnt: number;
   dias: number;
-  horario: string;
+  horario: string; // Pode ser string ou Date
   userId: string;
 }
 
@@ -27,7 +27,8 @@ interface Medicamento {
 })
 export class MedicamentosPage implements OnInit {
   medicamentos: Medicamento[] = [];
-  user: User | undefined;
+  user: User | undefined; // Usuário que será recuperado
+  user$: Observable<User | undefined> | undefined; // Para uso com async pipe no template, se necessário
 
   constructor(
     private modalController: ModalController,
@@ -38,16 +39,16 @@ export class MedicamentosPage implements OnInit {
     private firestore: AngularFirestore // Injetar Firestore
   ) {}
 
-  async ngOnInit() {
-    // Obtenha o userId da rota ou de outra fonte
-    const userId = this.route.snapshot.paramMap.get('id') || 'id-do-utilizador';
-
-    // Carrega o utilizador a partir do Firebase
-    this.user = await firstValueFrom(this.userService.getUserById(userId));
-
-    if (this.user) {
-      // Carrega os medicamentos do utilizador
-      this.loadMedicamentos(this.user.id);
+  ngOnInit() {
+    const userId = this.route.snapshot.paramMap.get('id');
+    if (userId) {
+      // Substitui await por subscribe, já que getUserById retorna um Observable
+      this.userService.getUserById(userId).subscribe(user => {
+        this.user = user;  // Atribui o valor do Observable a 'this.user'
+        if (this.user) {
+          this.loadMedicamentos(this.user.id); // Carrega os medicamentos se o usuário estiver definido
+        }
+      });
     }
   }
 
@@ -66,7 +67,7 @@ export class MedicamentosPage implements OnInit {
     const modal = await this.modalController.create({
       component: AddMedicamentoModalPage,
       componentProps: {
-        user: this.user, // Passa o utilizador para o modal
+        user: this.user, // Passa o usuário para o modal
       },
     });
 
@@ -76,10 +77,8 @@ export class MedicamentosPage implements OnInit {
 
         // Verificar se o medicamento já existe
         if (!this.medicamentoExiste(medicamento.nome)) {
-          // Adiciona ao Firestore
-          await this.medicamentoService.addMedicamento(medicamento);
-          // Agenda o lembrete
-          this.scheduleReminder(medicamento);
+          await this.medicamentoService.addMedicamento(medicamento); // Adiciona ao Firestore
+          this.scheduleReminder(medicamento);  // Agenda o lembrete
         }
       }
     });
@@ -106,8 +105,8 @@ export class MedicamentosPage implements OnInit {
         {
           text: 'Excluir',
           handler: async () => {
-            if (this.user) {
-              await this.medicamentoService.removeMedicamento(medicamento.nome, this.user.id);
+            if (medicamento.id) {
+              await this.medicamentoService.removeMedicamento(medicamento.id); // Passa o ID correto para exclusão
             }
           },
         },
@@ -119,29 +118,25 @@ export class MedicamentosPage implements OnInit {
 
   // Agendar lembrete para tomar o medicamento
   async scheduleReminder(medicamento: Medicamento) {
-    // Tentar converter o horário em objeto Date se necessário
-    const horario = new Date(medicamento.horario);
-
-    // Verifique se a data é válida antes de agendar a notificação
-    if (isNaN(horario.getTime())) {
-      console.error('Horário inválido para o medicamento', medicamento.nome);
-      return;
+    const horario = new Date(medicamento.horario); // Converte para Date
+    if (!isNaN(horario.getTime())) { // Verifica se a data é válida
+      await LocalNotifications.schedule({
+        notifications: [
+          {
+            id: Date.now(),
+            title: `Hora de tomar o medicamento: ${medicamento.nome}`,
+            body: `Tipo: ${medicamento.tipo}, Dosagem: ${medicamento.dosagem}`,
+            schedule: { at: horario },
+            sound: undefined,
+          },
+        ],
+      });
+    } else {
+      console.error('Horário inválido para o lembrete:', medicamento.horario);
     }
-
-    // Agenda a notificação local
-    await LocalNotifications.schedule({
-      notifications: [
-        {
-          id: Date.now(),
-          title: `Hora de tomar o medicamento: ${medicamento.nome}`,
-          body: `Tipo: ${medicamento.tipo}, Dosagem: ${medicamento.dosagem}`,
-          schedule: { at: horario },
-          sound: undefined,
-        },
-      ],
-    });
   }
 }
+
 
 
 
