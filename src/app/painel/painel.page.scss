@@ -2,49 +2,60 @@ ion-content {
   --background: linear-gradient(135deg, #167D7F, #29A0B1, #98D7C2, #DDFFE7);
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Mantém os elementos no topo */
+  align-items: flex-start;
   padding: 20px;
 }
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Ajusta os cards dinamicamente */
-  gap: 20px; /* Espaçamento entre os cards */
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 5px;
   width: 100%;
-  max-width: 900px; /* Limita a largura da grid para melhorar o layout em ecrãs grandes */
-  margin-top: 20px; /* Espaçamento superior entre os elementos */
+  max-width: 900px;
+  margin-top: 20px;
   padding: 10px;
-  justify-items: center; /* Centraliza os cards */
+  justify-items: center;
 }
 
 ion-card {
-  background: rgba(255, 255, 255, 0.1); /* Torna o fundo semitransparente */
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(228, 7, 7, 0.185);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  
-  /* Define dimensões responsivas */
   width: 100%;
-  max-width: 200px; /* Mantém os cards menores e mais uniformes */
-  height: 150px; /* Altura fixa para os cards */
-  
+  max-width: 150px;
+  height: 150px; /* Aumentada para acomodar melhor os ícones maiores */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
-  /* Efeitos visuais ao passar o cursor sobre os cards */
+
   &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transform: scale(1.08);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
   }
 }
 
-ion-card-header, ion-card-title {
-  color: #FFFFFF; /* Cor do texto dos títulos para maior contraste */
+ion-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ion-card-title {
+  color: #FFFFFF;
   font-size: 1.2rem;
   font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.card-icon {
+  font-size: 48px; /* Aumenta o tamanho do ícone */
+  color: #FFFFFF;
+  margin-bottom: 6px; /* Espaço entre o ícone e o título */
+  display: block;
   text-align: center;
 }
 
@@ -55,7 +66,7 @@ ion-card-content {
 }
 
 h1 {
-  color: #FFFFFF; /* Cor branca para o nome do utilizador */
+  color: #FFFFFF;
   text-align: center;
   font-size: 1.8rem;
   margin-top: 20px;
@@ -67,5 +78,3 @@ p {
   font-size: 1rem;
   margin-top: 20px;
 }
-
-  

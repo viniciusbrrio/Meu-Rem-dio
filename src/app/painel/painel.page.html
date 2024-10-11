@@ -25,16 +25,16 @@
 
   <!-- Grid de cards com opções -->
   <div class="card-grid">
-    
     <ion-card style="--background: #167D7F;" *ngFor="let item of items" 
               [routerLink]="[item.title === 'Remédios' ? '/medicamentos' : item.title === 'Receitas' ? '/receitas' : '/outro', user?.id]">
       <ion-card-header>
+        <!-- Ícones para os cards -->
+        <ion-icon [name]="item.title === 'Remédios' ? 'medkit-outline' : item.title === 'Receitas' ? 'receipt-outline' : 'information-circle-outline'" class="card-icon"></ion-icon>
         <ion-card-title>{{ item.title }}</ion-card-title>
       </ion-card-header>
       <ion-card-content class="ion-text-center">
       </ion-card-content>
     </ion-card>
-    
   </div>
 
 </ion-content>

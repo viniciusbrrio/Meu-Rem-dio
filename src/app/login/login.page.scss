@@ -2,73 +2,84 @@ ion-content {
   --background: linear-gradient(135deg, #167D7F, #29A0B1, #98D7C2, #DDFFE7);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 20px;
+  align-items: center;
+  height: 100%;
 }
 
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
-  width: 100%;
-  max-width: 900px;
-  margin-top: 20px;
-  padding: 10px;
-  justify-items: center;
-}
-
-ion-card {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  width: 100%;
-  max-width: 200px;
-  height: 180px; /* Ajustada para acomodar os ícones */
+.login-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
-  &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-  }
+  width: 100%;
+  max-width: 400px; /* Define uma largura máxima */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-ion-card-header {
+img {
+  margin-top: 30px;
+  margin-bottom: 10px;
+  width: 200px;
+  height: 200px;
+}
+
+ion-card {
+  width: 100%;
+  max-width: 400px;
+  background: transparent;
+  box-shadow: none;
+  border: 2px solid rgba(32, 32, 34, 0.2); 
+}
+
+.signup-link {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  margin-top: 15px;
+  font-size: 14px;
 }
 
-ion-card-title {
-  color: #FFFFFF;
-  font-size: 1.2rem;
+.signup-link ion-text {
+  margin-right: 8px; /* Espaçamento entre o texto e o botão */
+}
+
+.signup-link ion-button {
+  --padding-start: 0;
+  --padding-end: 0;
   font-weight: bold;
-  text-align: center;
-  margin-top: 10px;
+  color: var(--ion-color-primary);
 }
 
-.card-icon {
-  font-size: 36px;
-  color: #FFFFFF;
+ion-label, ion-input {
+  background: transparent; /* Transforma o fundo dos inputs transparente */
 }
 
-h1 {
-  color: #FFFFFF;
-  text-align: center;
-  font-size: 1.8rem;
-  margin-top: 20px;
+/* Estilo dos campos de input e label */
+ion-item {
+  --background: transparent; /* Evita fundo no ion-item */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5); /* Borda inferior clara */
 }
 
-p {
-  color: #FFFFFF;
-  text-align: center;
-  font-size: 1rem;
-  margin-top: 20px;
+ion-label {
+  color: #DDFFE7; /* Torna o texto do label compatível com o fundo */
+  font-size: 1rem; /* Ajuste do tamanho da fonte */
+  font-weight: bold;
 }
 
+/* Cor do texto digitado nos campos de input */
+ion-input {
+  color: #DDFFE7; /* Cor branca esverdeada para combinar com o fundo */
+}
+
+.login {
+  --background: #167D7F;
+  --color: white;
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.8);
+}
+
+ion-text {
+  margin-right: 8px;
+}
 
   

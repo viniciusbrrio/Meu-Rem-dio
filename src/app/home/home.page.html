@@ -23,7 +23,7 @@
     
     <ion-buttons slot="end">
       <ion-button routerLink="/perfil">
-        <ion-icon name="person-circle"></ion-icon>
+        
       </ion-button>
       <ion-img src="/assets/imagem/logo1.png" style="width: 40px; height: 40px;"></ion-img>
     </ion-buttons>
@@ -31,6 +31,7 @@
 </ion-header>
 
 <ion-content id="main-content">
+  <!-- Botão Flutuante para adicionar usuário -->
   <ion-fab slot="fixed" horizontal="end" vertical="bottom">
     <ion-fab-button style="--background: #20A0B1;" (click)="openAddUserModal()">
       <ion-icon name="add"></ion-icon>
@@ -39,9 +40,9 @@
 
   <!-- Lista de usuários -->
   <ion-list>
-    <ion-card *ngFor="let user of users" style="background-color: rgb(188, 215, 240);">
+    <ion-card *ngFor="let user of users" class="user-card">
       <ion-card-header (click)="goToUserPanel(user)">
-        <ion-card-title style="color: black;">{{ user.nome }}</ion-card-title>
+        <ion-card-title class="card-title">{{ user.nome }}</ion-card-title>
       </ion-card-header>
       
       <ion-card-content>
@@ -58,5 +59,4 @@
       </ion-card-content>
     </ion-card>
   </ion-list>
-
 </ion-content>
