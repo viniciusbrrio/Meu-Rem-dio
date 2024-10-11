@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar style="--background: #20A0B1;">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Registro de Glicose</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/painel"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label position="floating">Data e Hora</ion-label><br/>
+    <ion-datetime display-format="DD/MM/YYYY HH:mm" [(ngModel)]="glicose.dataHora"></ion-datetime>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Glicose (mg/dL)</ion-label><br/>
+    <ion-input type="number" [(ngModel)]="glicose.nivel" placeholder="Digite o nível de glicose"></ion-input>
+  </ion-item>
+
+  <ion-button expand="block" (click)="salvarGlicose()">Salvar Medição</ion-button>
+</ion-content>

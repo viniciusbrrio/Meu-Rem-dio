@@ -26,15 +26,15 @@
   <!-- Grid de cards com opções -->
   <div class="card-grid">
     <ion-card style="--background: #167D7F;" *ngFor="let item of items" 
-              [routerLink]="[item.title === 'Remédios' ? '/medicamentos' : item.title === 'Receitas' ? '/receitas' : '/outro', user?.id]">
-      <ion-card-header>
-        <!-- Ícones para os cards -->
-        <ion-icon [name]="item.title === 'Remédios' ? 'medkit-outline' : item.title === 'Receitas' ? 'receipt-outline' : 'information-circle-outline'" class="card-icon"></ion-icon>
-        <ion-card-title>{{ item.title }}</ion-card-title>
-      </ion-card-header>
-      <ion-card-content class="ion-text-center">
-      </ion-card-content>
-    </ion-card>
+  [routerLink]="[item.title === 'Remédios' ? '/medicamentos' : item.title === 'Receitas' ? '/receitas' : item.title === 'Consulta' ? '/consulta' :  item.title === 'Pressão' ? '/pressao' : item.title === 'Glicose' ? '/glicose' :  item.title === 'Anotações' ? '/anotacoes' : '/outro', user?.id]">
+  <ion-card-header>
+      <ion-icon [name]="item.title === 'Remédios' ? 'medkit-outline' : item.title === 'Receitas' ? 'receipt-outline' : item.title === 'Consulta' ? 'clipboard-outline' : item.title === 'Pressão' ? 'heart-outline' : item.title === 'Glicose' ? 'bar-chart-outline' : item.title === 'Anotações' ? 'heart-outline' : 'information-circle-outline'" class="card-icon"></ion-icon>
+      <ion-card-title>{{ item.title }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="ion-text-center">
+    </ion-card-content>
+  </ion-card>
+
   </div>
 
 </ion-content>

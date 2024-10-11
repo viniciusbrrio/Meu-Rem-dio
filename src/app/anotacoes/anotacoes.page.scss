@@ -1,0 +1,15 @@
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  
+  ion-searchbar {
+    margin: 16px;
+  }
+  /* anotações.page.scss */
+.searchbar {
+    --padding-start: 16px;  /* ajuste o valor conforme necessário */
+    --padding-end: 16px;    /* ajuste o valor conforme necessário */
+  }
+  

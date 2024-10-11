@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar style="--background: #20A0B1;">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Anotações</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/painel"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <!-- Toolbar para o botão de adicionar -->
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="adicionarNota()">Adicionar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  
+
+  <ion-list>
+    <ion-item *ngFor="let nota of anotacoesFiltradas">
+      <ion-label>
+        <h2>{{ nota.dataHora | date:'short' }}</h2>
+        <p>{{ nota.conteudo }}</p>
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button (click)="editarNota(nota)">Editar</ion-button>
+        <ion-button (click)="excluirNota(nota)">Excluir</ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -36,6 +36,23 @@ const routes: Routes = [
     path: 'receitas/:id',
     loadChildren: () => import('./receitas/receitas.module').then( m => m.ReceitasPageModule)
   },
+  {
+    path: 'consulta/:id',
+    loadChildren: () => import('./consulta/consulta.module').then( m => m.ConsultaPageModule)
+  },
+  {
+    path: 'pressao/:id',
+    loadChildren: () => import('./pressao/pressao.module').then( m => m.PressaoPageModule)
+  },
+  {
+    path: 'glicose/:id',
+    loadChildren: () => import('./glicose/glicose.module').then( m => m.GlicosePageModule)
+  },
+  {
+    path: 'anotacoes/:id',
+    loadChildren: () => import('./anotacoes/anotacoes.module').then( m => m.AnotacoesPageModule)
+  },
+  
 ];
 
 

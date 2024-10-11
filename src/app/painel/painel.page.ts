@@ -18,7 +18,7 @@ export class PainelPage implements OnInit {
     { title: 'Glicose' },
     { title: 'Receitas' },
     { title: 'Anotações' },
-    { title: 'Consultas' }
+    { title: 'Consulta' }
   ];
 
   constructor(

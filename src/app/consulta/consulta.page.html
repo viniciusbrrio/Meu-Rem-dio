@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar style="--background: #20A0B1;">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Consultas</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/painel"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label position="floating">Título da Consulta</ion-label>
+    <ion-input type="text" [(ngModel)]="consulta.titulo"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Nome do Médico</ion-label>
+    <ion-input type="text" [(ngModel)]="consulta.medico"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Hora da Consulta</ion-label><br/>
+    <ion-datetime display-format="HH:mm" [(ngModel)]="consulta.hora"></ion-datetime>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Localização</ion-label>
+    <ion-input type="text" [(ngModel)]="consulta.localizacao"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Observações</ion-label>
+    <ion-textarea [(ngModel)]="consulta.observacoes"></ion-textarea>
+  </ion-item>
+
+  <ion-button expand="block" (click)="salvarConsulta()">Salvar Consulta</ion-button>
+</ion-content>
