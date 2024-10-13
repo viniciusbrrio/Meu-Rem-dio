@@ -15,9 +15,8 @@
   <!-- Verifica se o utilizador foi carregado -->
   <ng-container *ngIf="user; else notFound">
     <h1> {{ user.nome }}</h1>
-    <!-- Exibe outros dados do utilizador -->
   </ng-container>
-  
+     
   <!-- Caso o utilizador não tenha sido encontrado -->
   <ng-template #notFound>
     <p>Utilizador não encontrado.</p>
