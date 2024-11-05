@@ -64,6 +64,7 @@ ion-item {
     --border-radius: 8px;
     font-weight: bold;
     margin-left: 10px;
+    margin-bottom: 15px;
   }
 
 ion-icon {
@@ -74,5 +75,26 @@ ion-fab {
   ion-fab-button {
     width: 60px;
     height: 60px;
+  }
+}
+
+// Tabs
+
+ion-tab-bar {
+  --background: #20A0B1;
+
+  ion-tab-button {
+    color: #FFFFFF;
+
+    ion-icon, ion-label {
+      color: #FFFFFF;
+      transition: box-shadow 0.3s ease;
+    }
+
+    &:hover {
+      ion-icon, ion-label {
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+      }
+    }
   }
 }

@@ -10,11 +10,10 @@ import { Observable } from 'rxjs';
   templateUrl: './add-medicamento-modal.page.html',
   styleUrls: ['./add-medicamento-modal.page.scss'],
 })
-
 export class AddMedicamentoModalPage implements OnInit {
   medicamentoForm!: FormGroup;
-  user!: User; // Certifique-se que o user está corretamente inicializado
-  medicamentos$: Observable<any[]> | undefined; // Use um Observable para medicamentos
+  user!: User;
+  medicamentos$: Observable<any[]> | undefined;
 
   constructor(
     private modalController: ModalController,
@@ -23,44 +22,41 @@ export class AddMedicamentoModalPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Inicializar o formulário com validação
     this.medicamentoForm = this.formBuilder.group({
       nome: ['', Validators.required],
       tipo: ['', Validators.required],
       dosagem: ['', Validators.required],
       qnt: ['', [Validators.required, Validators.min(1)]],
       dias: ['', [Validators.required, Validators.min(1)]],
-      horario: ['', Validators.required]
+      dataInicio: ['', Validators.required]
     });
 
-    // Verificar se o `user` está corretamente inicializado
     if (this.user && this.user.id) {
-      // Atualiza a lista com os medicamentos associados ao usuário, através de um Observable
       this.medicamentos$ = this.medicamentoService.getMedicamentos(this.user.id);
     } else {
       console.error("O usuário não está definido ou o ID está ausente.");
     }
   }
 
-  // Fechar o modal sem adicionar
   dismissModal() {
     this.modalController.dismiss();
   }
 
-  // Adicionar o medicamento e fechar o modal
+  onDateTimeChange(event: any) {
+    const date = new Date(event.detail.value);
+    this.medicamentoForm.patchValue({ dataInicio: date });
+  }
+
   async addMedicamento() {
     if (this.medicamentoForm.valid) {
       const medicamento = {
         ...this.medicamentoForm.value,
-        userId: this.user.id // Adiciona o userId ao medicamento
+        userId: this.user.id
       };
 
-      // Tenta adicionar o medicamento via serviço
       try {
         await this.medicamentoService.addMedicamento(medicamento);
         console.log('Medicamento adicionado com sucesso:', medicamento);
-        
-        // Fechar o modal e passar os dados do novo medicamento
         this.modalController.dismiss(medicamento);
       } catch (error) {
         console.error('Erro ao adicionar medicamento:', error);
@@ -70,8 +66,3 @@ export class AddMedicamentoModalPage implements OnInit {
     }
   }
 }
-
-
-
-
-

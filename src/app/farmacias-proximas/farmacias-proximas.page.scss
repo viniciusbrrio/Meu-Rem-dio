@@ -1,0 +1,96 @@
+ion-header {
+  --background: rgba(32, 160, 177, 0.9); // Background levemente translúcido
+}
+
+ion-title {
+  color: white; // Título em branco para destaque
+  font-weight: bold;
+  font-size: 1.5rem; // Tamanho do texto do título
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  height: 100%; // Assegura que o conteúdo ocupe toda a altura disponível
+}
+
+.pharmacy-container {
+  text-align: center; // Centraliza o texto no contêiner
+  width: 100%;
+  max-width: 600px; // Largura máxima para melhor legibilidade
+  background: rgba(255, 255, 255, 0.9); // Fundo leve para contraste
+  border-radius: 10px; // Bordas arredondadas
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); // Sombra suave
+  padding: 20px; // Espaçamento interno
+}
+
+h2 {
+  color: #20A0B1; // Cor do título principal
+  margin-bottom: 15px; // Margem inferior para espaçamento
+}
+
+ion-button {
+  --background: #20A0B1; // Cor de fundo do botão
+  --color: white; // Cor do texto do botão
+  --border-radius: 8px; // Bordas arredondadas
+  font-weight: bold; // Negrito para o texto do botão
+  margin-bottom: 20px; // Margem inferior para espaçamento
+}
+
+ion-list {
+  width: 100%;
+  padding: 0; // Remove o padding padrão da lista
+}
+
+.pharmacy-card {
+  --background: transparent; // Fundo transparente para os itens da lista
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1); // Borda inferior leve
+  padding: 10px; // Padding para os itens
+  color: #167D7F; // Cor do texto
+}
+
+ion-label {
+  color: #167D7F; // Cor do texto dos rótulos
+  font-size: 1rem; // Tamanho do texto dos rótulos
+}
+
+h3 {
+  font-weight: bold; // Negrito para os títulos das farmácias
+  color: #167D7F; // Cor dos títulos
+}
+
+p {
+  font-size: 0.9rem; // Tamanho do texto secundário
+  color: #555; // Cor mais clara para informações secundárias
+  margin: 0; // Remove margem
+}
+
+// Mensagens de erro ou aviso
+ion-item {
+  margin-top: 10px; // Espaço acima dos itens
+  --background: transparent; // Fundo transparente
+}
+
+  // Tabs
+
+  ion-tab-bar {
+    --background: #20A0B1;
+  
+    ion-tab-button {
+      color: #FFFFFF;
+  
+      ion-icon, ion-label {
+        color: #FFFFFF;
+        transition: box-shadow 0.3s ease;
+      }
+  
+      &:hover {
+        ion-icon, ion-label {
+          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        }
+      }
+    }
+  }
+  

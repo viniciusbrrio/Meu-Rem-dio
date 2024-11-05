@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar style="--background: #20A0B1;">
+    
+    <ion-title>Controle de Receitas</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/painel/:id"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Toolbar para o botão de adicionar -->
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="adicionarReceita()" class="adicionar">Adicionar Receita</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content id="main-content">
+
+  <ion-tabs>
+    <!-- Componente Tabs -->
+    <ion-tab-bar slot="bottom" style="--background: #20A0B1;">
+      <ion-tab-button tab="home">
+        <ion-icon name="home-outline" routerLink="/home"></ion-icon>
+        <ion-label>Home</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="farmacias">
+        <ion-icon name="medkit-outline" routerLink="/farmacias-proximas/:id"></ion-icon>
+        <ion-label>Farmácias</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="bulas">
+        <ion-icon name="document-text-outline"></ion-icon>
+        <ion-label>Bulas</ion-label>
+      </ion-tab-button>
+      </ion-tab-bar>
+    
+    <ion-tab tab="receita">
+      <ion-content>
+        <!-- Lista de receitas -->
+        <ion-list>
+          <ion-item *ngFor="let receita of receitasFiltradas">
+            <ion-thumbnail slot="start">
+              <img [src]="receita.imagemUrl" alt="Imagem da Receita">
+            </ion-thumbnail>
+            <ion-label>
+              <h2>Data de Validade: {{ formatarData(receita.dataValidade) }}</h2>
+            </ion-label>
+            <ion-buttons slot="end">
+              <ion-button (click)="editarReceita(receita)">Editar</ion-button>
+              <ion-button color="danger" (click)="excluirReceita(receita)">Excluir</ion-button>
+            </ion-buttons>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-tab>
+  </ion-tabs>
+</ion-content>
+
+<!-- Modal de ion-datetime para selecionar a data de validade -->
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime id="datetime"></ion-datetime>
+  </ng-template>
+</ion-modal>
+

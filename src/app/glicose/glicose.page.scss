@@ -1,0 +1,106 @@
+ion-header {
+    --background: #20A0B1;
+  
+    ion-title {
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+  
+    ion-back-button {
+      color: white;
+    }
+  }
+  
+  ion-content {
+    --background: linear-gradient(135deg, #167D7F, #29A0B1, #98D7C2, #DDFFE7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    height: 100%; /* Garante que o conteúdo ocupe toda a altura */
+  }
+  
+  /* Estilização para a lista de medições de glicose */
+  ion-list {
+    width: 100%;
+    max-width: 500px; /* Define uma largura máxima para a lista */
+    background: rgba(255, 255, 255, 0.9); /* Fundo leve para destacar os itens */
+    border-radius: 10px; /* Bordas arredondadas */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    margin-bottom: 20px;
+  }
+  
+  ion-item {
+    --background: transparent;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Borda inferior leve */
+    padding: 10px;
+    color: #167D7F; /* Cor do texto dos itens */
+  
+    ion-label {
+      color: #167D7F;
+  
+      h2 {
+        font-weight: bold;
+        color: #167D7F;
+        margin-bottom: 5px;
+      }
+  
+      p {
+        font-size: 0.9rem;
+        color: #555; /* Cor mais clara para informações secundárias */
+        margin: 0;
+      }
+    }
+  
+    ion-buttons {
+      margin-left: auto; /* Alinha os botões à direita */
+    }
+  }
+
+  .adicionar {
+    box-shadow: 0px 2px 4px rgba(3, 168, 233, 0.1);
+    border-radius: 5px;
+  }
+  
+  ion-button {
+    --background: #167D7F;
+    --color: white;
+    --border-radius: 8px;
+    font-weight: bold;
+    margin-left: 10px;
+  }
+  
+  ion-icon {
+    font-size: 1.5rem; /* Tamanho maior do ícone */
+  }
+  
+  ion-fab {
+    ion-fab-button {
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  // Tabs
+
+ion-tab-bar {
+  --background: #20A0B1;
+
+  ion-tab-button {
+    color: #FFFFFF;
+
+    ion-icon, ion-label {
+      color: #FFFFFF;
+      transition: box-shadow 0.3s ease;
+    }
+
+    &:hover {
+      ion-icon, ion-label {
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+}
+
+  

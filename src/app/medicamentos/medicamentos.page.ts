@@ -1,3 +1,5 @@
+//medicamentos.page.ts
+
 import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { AddMedicamentoModalPage } from '../add-medicamento-modal/add-medicamento-modal.page';
@@ -8,17 +10,9 @@ import { MedicamentoService } from '../services/medicamento.service';
 import { User } from '../models/user.model';
 import { AngularFirestore } from '@angular/fire/compat/firestore'; // Firebase Firestore
 import { Observable } from 'rxjs';
+import { NotificationsService } from '../services/notifications.service';
+import { Medicamento } from '../interfaces/medicamento.interface';
 
-interface Medicamento {
-  id?: string; // ID opcional do Firestore
-  nome: string;
-  tipo: string;
-  dosagem: string;
-  qnt: number;
-  dias: number;
-  horario: string; // Pode ser string ou Date
-  userId: string;
-}
 
 @Component({
   selector: 'app-medicamentos',
@@ -31,6 +25,7 @@ export class MedicamentosPage implements OnInit {
   user$: Observable<User | undefined> | undefined; // Para uso com async pipe no template, se necessário
 
   constructor(
+    private notificationsService: NotificationsService,
     private modalController: ModalController,
     private alertController: AlertController,
     private medicamentoService: MedicamentoService,

@@ -1,39 +1,82 @@
 <ion-header [translucent]="true">
   <ion-toolbar style="--background: #20A0B1;">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
+
     <ion-title>Painel de Saúde</ion-title>
+
     <ion-buttons slot="end">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
-<ion-content id="main-content" [fullscreen]="true">
+<ion-content id="main-content" [fullscreen]="true" class="content-with-tabs">
 
   <!-- Verifica se o utilizador foi carregado -->
   <ng-container *ngIf="user; else notFound">
-    <h1> {{ user.nome }}</h1>
+    <h1> Este é seu Painel {{ user.nome }}</h1>
   </ng-container>
-     
+  
   <!-- Caso o utilizador não tenha sido encontrado -->
   <ng-template #notFound>
     <p>Utilizador não encontrado.</p>
   </ng-template>
-
   <!-- Grid de cards com opções -->
-  <div class="card-grid">
-    <ion-card style="--background: #167D7F;" *ngFor="let item of items" 
-  [routerLink]="[item.title === 'Remédios' ? '/medicamentos' : item.title === 'Receitas' ? '/receitas' : item.title === 'Consulta' ? '/consulta' :  item.title === 'Pressão' ? '/pressao' : item.title === 'Glicose' ? '/glicose' :  item.title === 'Anotações' ? '/anotacoes' : '/outro', user?.id]">
-  <ion-card-header>
-      <ion-icon [name]="item.title === 'Remédios' ? 'medkit-outline' : item.title === 'Receitas' ? 'receipt-outline' : item.title === 'Consulta' ? 'clipboard-outline' : item.title === 'Pressão' ? 'heart-outline' : item.title === 'Glicose' ? 'bar-chart-outline' : item.title === 'Anotações' ? 'heart-outline' : 'information-circle-outline'" class="card-icon"></ion-icon>
-      <ion-card-title>{{ item.title }}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content class="ion-text-center">
-    </ion-card-content>
-  </ion-card>
 
-  </div>
+  <ion-tabs>
+    <!-- Rodapé com as Tabs fora do ion-content -->
+    <ion-tab-bar slot="bottom" style="--background: #20A0B1;">
+      <ion-tab-button tab="home" routerLink="/home">
+        <ion-icon name="home-outline" style="color: #FFFFFF;"></ion-icon>
+        <ion-label>Home</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="farmacias" routerLink="/farmacias-proximas/:id">
+        <ion-icon name="medkit-outline" style="color: #FFFFFF;"></ion-icon>
+        <ion-label>Farmácias</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="bulas">
+        <ion-icon name="document-text-outline" style="color: #FFFFFF;"></ion-icon>
+        <ion-label>Bulas</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
 
+    <ion-tab tab="painel">
+      
+      <div class="card-grid">
+        <ion-card style="--background: #167D7F;" *ngFor="let item of items"
+          [routerLink]="[
+            item.title === 'Remédios' ? '/medicamentos' :
+            item.title === 'Receitas' ? '/controle-receitas' :
+            item.title === 'Consulta' ? '/consulta' :
+            item.title === 'Pressão' ? '/pressao' :
+            item.title === 'Glicose' ? '/glicose' :
+            item.title === 'Anotações' ? '/anotacoes' :
+            '/outro', user?.id
+          ]">
+          <ion-card-header>
+            <ion-icon
+              [name]="
+                item.title === 'Remédios' ? 'medkit-outline' :
+                item.title === 'Receitas' ? 'receipt-outline' :
+                item.title === 'Consulta' ? 'clipboard-outline' :
+                item.title === 'Pressão' ? 'heart-outline' :
+                item.title === 'Glicose' ? 'bar-chart-outline' :
+                item.title === 'Anotações' ? 'heart-outline' :
+                'information-circle-outline'
+              "
+              class="card-icon">
+            </ion-icon>
+            <ion-card-title>{{ item.title }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content class="ion-text-center">
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ion-tab>
+  </ion-tabs>
 </ion-content>
+
+
+
+
+

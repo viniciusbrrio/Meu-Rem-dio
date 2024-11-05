@@ -1,0 +1,57 @@
+/* src/app/pages/bula/bula.page.scss */
+.erro-container {
+    padding: 16px;
+    text-align: center;
+  }
+  
+  .sem-resultados,
+  .instrucoes {
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  ion-searchbar {
+    padding: 10px;
+  }
+  
+  ion-item {
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    
+    ion-label {
+      h2 {
+        font-weight: bold;
+        margin-bottom: 4px;
+        color: var(--ion-color-dark);
+      }
+  
+      h3 {
+        color: var(--ion-color-medium);
+        font-size: 0.9em;
+        margin-bottom: 4px;
+      }
+  
+      p {
+        font-size: 0.8em;
+        color: var(--ion-color-medium);
+        margin-top: 4px;
+      }
+    }
+  }
+  
+  ion-buttons {
+    ion-button {
+      --padding-start: 8px;
+      --padding-end: 8px;
+    }
+  }
+  
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+  }

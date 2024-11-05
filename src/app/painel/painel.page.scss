@@ -1,4 +1,5 @@
-ion-content {
+// Estilo do conteúdo principal
+#main-content {
   --background: linear-gradient(135deg, #167D7F, #29A0B1, #98D7C2, #DDFFE7);
   display: flex;
   justify-content: center;
@@ -6,13 +7,14 @@ ion-content {
   padding: 20px;
 }
 
+// Estilos para o grid de cards
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 5px;
+  gap: 10px;
   width: 100%;
   max-width: 900px;
-  margin-top: 20px;
+  margin-top: 100px;
   padding: 10px;
   justify-items: center;
 }
@@ -25,7 +27,7 @@ ion-card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   width: 100%;
   max-width: 150px;
-  height: 150px; /* Aumentada para acomodar melhor os ícones maiores */
+  height: 150px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -37,6 +39,7 @@ ion-card {
   }
 }
 
+// Estilo do cabeçalho dos cards
 ion-card-header {
   display: flex;
   flex-direction: column;
@@ -52,30 +55,40 @@ ion-card-title {
 }
 
 .card-icon {
-  font-size: 48px; /* Aumenta o tamanho do ícone */
+  font-size: 48px;
   color: #FFFFFF;
-  margin-bottom: 6px; /* Espaço entre o ícone e o título */
-  display: block;
+  margin-bottom: 6px;
   text-align: center;
 }
 
-ion-card-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-h1 {
+// Estilo dos títulos e mensagens
+h1, p {
   color: #FFFFFF;
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   margin-top: 20px;
 }
 
-p {
-  color: #FFFFFF;
-  text-align: center;
-  font-size: 1rem;
-  margin-top: 20px;
+// Estilo das abas de navegação
+ion-tab-bar {
+  --background: #20A0B1;
+
+  ion-tab-button {
+    color: #FFFFFF;
+
+    ion-icon,
+    ion-label {
+      color: #FFFFFF;
+      transition: box-shadow 0.3s ease;
+    }
+
+    &:hover {
+      ion-icon,
+      ion-label {
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
 }
+
 

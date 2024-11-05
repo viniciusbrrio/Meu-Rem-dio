@@ -42,20 +42,24 @@
       <ion-input type="number" formControlName="dias" required></ion-input>
     </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Data de Início</ion-label>
-      <ion-datetime formControlName="dataInicio" display-format="YYYY-MM-DD" picker-format="YYYY-MM-DD" required></ion-datetime>
+    <!-- Botão para abrir o seletor de data e hora de início -->
+    <ion-item lines="none">
+      <ion-label>Data e Hora de Início</ion-label>
+      <ion-datetime-button datetime="datetime"></ion-datetime-button>
     </ion-item>
+    <ion-text *ngIf="medicamentoForm.value.dataInicio">
+      {{ medicamentoForm.value.dataInicio | date: 'short' }}
+    </ion-text>
 
-
-    <ion-item>
-      <ion-label position="floating">Horário</ion-label>
-      <ion-datetime formControlName="horario" display-format="HH:mm" picker-format="HH:mm" required></ion-datetime>
-    </ion-item>
+    <!-- Modal do ion-datetime -->
+    <ion-modal [keepContentsMounted]="true">
+      <ng-template>
+        <ion-datetime id="datetime" (ionChange)="onDateTimeChange($event)"></ion-datetime>
+      </ng-template>
+    </ion-modal>
 
     <ion-button expand="full" type="submit" [disabled]="!medicamentoForm.valid">
       Adicionar
     </ion-button>
   </form>
 </ion-content>
-

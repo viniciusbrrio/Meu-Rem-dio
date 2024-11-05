@@ -1,25 +1,60 @@
 <ion-header>
   <ion-toolbar style="--background: #20A0B1;">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Registro de Glicose</ion-title>
+    
+    <ion-title>Glicose</ion-title>
     <ion-buttons slot="end">
-      <ion-back-button defaultHref="/painel"></ion-back-button>
+      <ion-back-button defaultHref="/painel/:id"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Toolbar para o botão de adicionar -->
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="adicionarNota()" class="adicionar">Adicionar Medição</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-item>
-    <ion-label position="floating">Data e Hora</ion-label><br/>
-    <ion-datetime display-format="DD/MM/YYYY HH:mm" [(ngModel)]="glicose.dataHora"></ion-datetime>
-  </ion-item>
+<ion-content id="main-content">
 
-  <ion-item>
-    <ion-label position="floating">Glicose (mg/dL)</ion-label><br/>
-    <ion-input type="number" [(ngModel)]="glicose.nivel" placeholder="Digite o nível de glicose"></ion-input>
-  </ion-item>
+  <ion-tabs>
+    <!-- Componente Tabs -->
+    <ion-tab-bar slot="bottom" style="--background: #20A0B1;">
+      <ion-tab-button tab="home">
+        <ion-icon name="home-outline" routerLink="/home"></ion-icon>
+        <ion-label>Home</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="farmacias">
+        <ion-icon name="medkit-outline" routerLink="/farmacias-proximas/:id"></ion-icon>
+        <ion-label>Farmácias</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="bulas">
+        <ion-icon name="document-text-outline"></ion-icon>
+        <ion-label>Bulas</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
 
-  <ion-button expand="block" (click)="salvarGlicose()">Salvar Medição</ion-button>
+    <ion-tab tab="glicose">
+    <ion-content>
+      <!-- Barra de pesquisa -->
+      <ion-searchbar (ionInput)="filtrarAnotacoes($event)" placeholder="Pesquisar"></ion-searchbar>
+  
+      <!-- Lista de medições de glicose -->
+      <ion-list>
+        <ion-item *ngFor="let nota of glicoseFiltradas">
+          <ion-label>
+            <h2>{{ formatarDataHora(nota.dataHora) }}</h2>
+            <p>{{ nota.conteudo }}</p>
+          </ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="editarNota(nota)">Editar</ion-button>
+            <ion-button color="danger" (click)="excluirNota(nota)">Excluir</ion-button>
+          </ion-buttons>
+        </ion-item>
+      </ion-list>
+  
+    </ion-content>
+  </ion-tab>
+  </ion-tabs>
+  
 </ion-content>

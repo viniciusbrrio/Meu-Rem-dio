@@ -8,19 +8,21 @@
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="userForm" (ngSubmit)="addUser()">
-    <ion-item>
-      <ion-label position="floating">Nome</ion-label>
-      <ion-input formControlName="nome" required></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Idade</ion-label>
-      <ion-input type="number" formControlName="idade" required></ion-input>
-    </ion-item>
-
-    <ion-button expand="full" type="submit" [disabled]="!userForm.valid">
-      Adicionar
-    </ion-button>
-  </form>
+  <div class="modal-container">
+    <form [formGroup]="userForm" (ngSubmit)="addUser()" class="user-form">
+      <ion-item>
+        <ion-label position="floating">Nome</ion-label>
+        <ion-input formControlName="nome" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Idade</ion-label>
+        <ion-input type="number" formControlName="idade" required></ion-input>
+      </ion-item>
+      <ion-button expand="full" type="submit" [disabled]="!userForm.valid">
+        Adicionar
+      </ion-button>
+    </form>
+  </div>
 </ion-content>
+
 

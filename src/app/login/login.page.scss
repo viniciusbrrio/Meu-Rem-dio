@@ -1,3 +1,4 @@
+/* Fundo com gradiente suave e flexibilidade para centralização */
 ion-content {
   --background: linear-gradient(135deg, #167D7F, #29A0B1, #98D7C2, #DDFFE7);
   display: flex;
@@ -9,77 +10,120 @@ ion-content {
 .login-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 400px; /* Define uma largura máxima */
+  max-width: 380px;
   padding: 20px;
   box-sizing: border-box;
 }
 
-img {
-  margin-top: 30px;
-  margin-bottom: 10px;
-  width: 200px;
-  height: 200px;
+.logo-img {
+  width: 180px;
+  height: 180px;
+  margin-bottom: 1px;
 }
 
 ion-card {
   width: 100%;
-  max-width: 400px;
-  background: transparent;
-  box-shadow: none;
-  border: 2px solid rgba(32, 32, 34, 0.2); 
+  background: rgba(255, 255, 255, 0.15); /* Fundo translúcido */
+  backdrop-filter: blur(10px);            /* Efeito de blur */
+  border-radius: 16px;                    /* Bordas arredondadas */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra leve */
+  padding: 10px;
 }
 
-.signup-link {
+ion-card-header {
+  text-align: center;
+  margin-bottom: -15px;
+}
+
+ion-card-title {
+  font-weight: bold;
+  color: #FFFFFF;
+  font-size: 1.2rem;
+}
+
+ion-item {
+  --background: transparent;
+  --border-color: rgba(255, 255, 255, 0.5); /* Cor da borda inferior */
+  margin-bottom: -3px;                     /* Espaço entre os campos */
+  border-radius: 8px;
+  padding: 8px 0;
+}
+
+ion-label {
+  color: #22036b;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+ion-input {
+  color: #FFFFFF; /* Texto digitado em branco */
+  --padding-start: 8px;
+}
+
+/* Estilo do checkbox para lembrar sessão */
+.checkbox-item {
+  margin-top: -10px;
+}
+
+ion-checkbox {
+  --color: #5d5f5e; /* Cor do checkbox */
+}
+
+ion-label.checkbox-label {
+  font-size: 0.9rem;
+  color: #FFFFFF;
+}
+
+/* Botão de login principal */
+.login-button {
+  --background: #167D7F;
+  color: #FFFFFF;
+  font-weight: bold;
+  margin-top: 6px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  height: 30px;
+}
+
+/* Botão de login com Google */
+.google-button {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 15px;
+  border-color: #FFFFFF;
+  color: #7c4747;
+  --background: transparent;
+}
+
+.google-icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 8px;
+}
+
+/* Estilo para o link de cadastro */
+.signup-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 14px;
+  margin-top: 3px;
 }
 
 .signup-link ion-text {
-  margin-right: 8px; /* Espaçamento entre o texto e o botão */
+  color: #353635;
 }
 
 .signup-link ion-button {
   --padding-start: 0;
   --padding-end: 0;
+  color: #2b40a0;
   font-weight: bold;
-  color: var(--ion-color-primary);
+  text-decoration: underline;
 }
 
-ion-label, ion-input {
-  background: transparent; /* Transforma o fundo dos inputs transparente */
-}
-
-/* Estilo dos campos de input e label */
-ion-item {
-  --background: transparent; /* Evita fundo no ion-item */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5); /* Borda inferior clara */
-}
-
-ion-label {
-  color: #DDFFE7; /* Torna o texto do label compatível com o fundo */
-  font-size: 1rem; /* Ajuste do tamanho da fonte */
-  font-weight: bold;
-}
-
-/* Cor do texto digitado nos campos de input */
-ion-input {
-  color: #DDFFE7; /* Cor branca esverdeada para combinar com o fundo */
-}
-
-.login {
-  --background: #167D7F;
-  --color: white;
-  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.8);
-}
-
-ion-text {
-  margin-right: 8px;
-}
 
   

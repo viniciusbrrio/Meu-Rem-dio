@@ -10,27 +10,52 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-item *ngFor="let medicamento of medicamentos">
-      <ion-label>
-        <h2>{{ medicamento.nome }}</h2>
-        <p>{{ medicamento.tipo }}</p>
-        <p>{{ medicamento.dosagem }} de {{ medicamento.qnt }}/{{ medicamento.qnt }} hrs.</p>
-        <p>Durante {{ medicamento.dias }} dias.</p>
-        <p>Início do tratamento: {{ medicamento.horario }}</p>
-      </ion-label>
-      <ion-button (click)="cancelarTarefa(medicamento)">Finalizar</ion-button>
-      
-    </ion-item>
-  </ion-list>
+<ion-content id="main-content">
+  
 
   <!-- Botão flutuante para adicionar medicamento -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button style="--background: #20A0B1;" (click)="openAddMedicamentoModal()">
+    <ion-fab-button style="--background: #20A0B1; margin-bottom: 55px;" (click)="openAddMedicamentoModal()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
+    <ion-tabs>
+      <!-- Componente Tabs -->
+      <ion-tab-bar slot="bottom" style="--background: #20A0B1;">
+        <ion-tab-button tab="home">
+          <ion-icon name="home-outline" routerLink="/home"></ion-icon>
+          <ion-label>Home</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="farmacias">
+          <ion-icon name="medkit-outline" routerLink="/farmacias-proximas/:id"></ion-icon>
+          <ion-label>Farmácias</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="bulas">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <ion-label>Bulas</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+      
+      <ion-tab tab="medicamentos">
+        <ion-content>
+          <ion-list>
+            <ion-item *ngFor="let medicamento of medicamentos">
+              <ion-label>
+                <h2>{{ medicamento.nome }}</h2>
+                <p>{{ medicamento.tipo }}</p>
+                <p>{{ medicamento.dosagem }} de {{ medicamento.qnt }}/{{ medicamento.qnt }} hrs.</p>
+                <p>Durante {{ medicamento.dias }} dias.</p>
+                <p>Início do tratamento: {{ medicamento.horario }}</p>
+              </ion-label>
+              <ion-button (click)="cancelarTarefa(medicamento)">Finalizar</ion-button>
+      
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </ion-tab>
+    </ion-tabs>
+
 </ion-content>
 
 

@@ -1,0 +1,63 @@
+/* Fundo de tela com cor personalizada e layout centralizado */
+ion-content {
+    --background: #DDFFE7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  /* Container do modal com bordas suaves e um fundo branco */
+  .modal-wrapper {
+    width: 100%;
+    max-width: 400px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Cabeçalho com cor de fundo sólida e título em branco */
+  ion-toolbar {
+    --background: #20A0B1;
+  }
+  
+  ion-title {
+    font-weight: bold;
+    color: white;
+  }
+  
+  /* Estilos dos inputs com espaçamento e bordas arredondadas */
+  form ion-item {
+    margin-bottom: 15px;
+    --background: #ddffe7;
+    border-radius: 8px;
+  }
+  
+  form ion-label {
+    color: #167d7f;
+    font-weight: 500;
+  }
+  
+  form ion-input,
+  form ion-select,
+  form ion-datetime {
+    color: #167d7f;
+    padding-left: 5px;
+  }
+  
+  /* Botão de ação principal */
+  form ion-button {
+    --background: #167d7f;
+    --color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  /* Botão de cancelar no cabeçalho */
+  ion-button[dismiss] {
+    color: white;
+    font-weight: bold;
+  }
+  

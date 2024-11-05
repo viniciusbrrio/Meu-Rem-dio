@@ -1,35 +1,46 @@
 <ion-header>
-
 </ion-header>
 
 <ion-content>
   <div class="login-container">
     <div class="login-logo">
-      <img src="/assets/imagem/logo_grande.png" alt="Login Logo">
+      <img src="/assets/imagem/logo_grande.png" alt="Login Logo" class="logo-img">
     </div>
 
     <ion-card>
       <ion-card-header>
         <ion-card-title style="font-weight: bold;">Iniciar Sessão</ion-card-title>
       </ion-card-header>
-
+        
       <ion-card-content>
         <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
           <ion-item>
             <ion-label position="floating">Email</ion-label>
             <ion-input type="email" formControlName="email" required></ion-input>
           </ion-item>
-          <br>
+
           <ion-item>
             <ion-label position="floating">Password</ion-label>
             <ion-input type="password" formControlName="password" required></ion-input>
           </ion-item>
-          <br>
-          <ion-button class="login" style="color: white; font-weight: bold;" expand="full" type="submit" [disabled]="!loginForm.valid">Login</ion-button>
+
+          <ion-item lines="none" class="checkbox-item">
+            <ion-checkbox slot="start" formControlName="rememberMe"></ion-checkbox>
+            <ion-label style="font-size: 12px;">Lembrar meu login</ion-label>
+          </ion-item>
+
+          <ion-button class="login-button" expand="full" type="submit" [disabled]="!loginForm.valid">
+            Login
+          </ion-button>
+
+          <!-- Botão de login com Google -->
+          <ion-button class="google-button" fill="outline" (click)="onGoogleLogin()" expand="full">
+            <img src="/assets/imagem/google.png" alt="Google Logo" class="google-icon">
+            Login com Google
+          </ion-button>
         </form>
       </ion-card-content>
 
-      <!-- Adicionando o link para a página de cadastro -->
       <div class="signup-link">
         <ion-text>Não tem uma conta?</ion-text>
         <ion-button fill="clear" routerLink="/cadastro">Cadastre-se</ion-button>
@@ -37,3 +48,5 @@
     </ion-card>
   </div>
 </ion-content>
+
+

@@ -1,0 +1,54 @@
+<!-- src/app/pages/bula/bula.page.html -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Bula de Medicamentos</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/painel/:id"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar
+    [(ngModel)]="termoPesquisa"
+    (ionChange)="onPesquisaChange($event)"
+    placeholder="Digite o nome do medicamento"
+    animated="true">
+  </ion-searchbar>
+
+  <div *ngIf="erro" class="erro-container">
+    <ion-text color="danger">
+      {{ erro }}
+    </ion-text>
+  </div>
+
+  <ion-list *ngIf="bula.length > 0">
+    <ion-item *ngFor="let med of bula">
+      <ion-label>
+        <h2>{{ med.name }}</h2>
+        <h3>{{ med.activeIngredient }}</h3>
+        <p>Manufacturer: {{ med.labeler }}</p>
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button (click)="verDetalhes(med)">
+          <ion-icon name="information-circle-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button (click)="abrirBula(med)">
+          <ion-icon name="document-text-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="!carregando && bula.length === 0 && termoPesquisa" class="sem-resultados">
+    <ion-text color="medium">
+      <p>No medications found.</p>
+    </ion-text>
+  </div>
+
+  <div *ngIf="!termoPesquisa" class="instrucoes">
+    <ion-text color="medium">
+      <p>Digite o nome do medicamento que deseja.</p>
+    </ion-text>
+  </div>
+</ion-content>

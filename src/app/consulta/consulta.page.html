@@ -1,40 +1,100 @@
 <ion-header>
-  <ion-toolbar style="--background: #20A0B1;">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
+  <ion-toolbar>
+    
     <ion-title>Consultas</ion-title>
     <ion-buttons slot="end">
-      <ion-back-button defaultHref="/painel"></ion-back-button>
+      <ion-back-button defaultHref="/painel/:id"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-item>
-    <ion-label position="floating">Título da Consulta</ion-label>
-    <ion-input type="text" [(ngModel)]="consulta.titulo"></ion-input>
-  </ion-item>
+<ion-content id="main-content">
+  <ion-tabs>
 
-  <ion-item>
-    <ion-label position="floating">Nome do Médico</ion-label>
-    <ion-input type="text" [(ngModel)]="consulta.medico"></ion-input>
-  </ion-item>
+      <!-- Componente Tabs -->
+      <ion-tab-bar slot="bottom" style="--background: #20A0B1;">
+        <ion-tab-button tab="home">
+          <ion-icon name="home-outline" routerLink="/home"></ion-icon>
+          <ion-label>Home</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="farmacias">
+          <ion-icon name="medkit-outline" routerLink="/farmacias-proximas/:id"></ion-icon>
+          <ion-label>Farmácias</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="bulas">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <ion-label>Bulas</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
 
-  <ion-item>
-    <ion-label position="floating">Hora da Consulta</ion-label><br/>
-    <ion-datetime display-format="HH:mm" [(ngModel)]="consulta.hora"></ion-datetime>
-  </ion-item>
-
-  <ion-item>
-    <ion-label position="floating">Localização</ion-label>
-    <ion-input type="text" [(ngModel)]="consulta.localizacao"></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-label position="floating">Observações</ion-label>
-    <ion-textarea [(ngModel)]="consulta.observacoes"></ion-textarea>
-  </ion-item>
-
-  <ion-button expand="block" (click)="salvarConsulta()">Salvar Consulta</ion-button>
+    <ion-tab tab="consulta">
+      <ion-content>
+      
+          <ion-list>
+            <ion-item *ngFor="let item of consultasList">
+              <ion-label>
+                <h2>{{ item.titulo }}</h2>
+                <p><strong>Médico:</strong> {{ item.medico }}</p>
+                <p><strong>Data e Hora:</strong> {{ item.dataHora }}</p>
+                <p><strong>Localização:</strong> {{ item.localizacao }}</p>
+                <p><strong>Observações:</strong> {{ item.observacoes }}</p>
+              </ion-label>
+              <ion-button (click)="cancelarTarefa(consulta)">Finalizar</ion-button>
+            </ion-item>
+          </ion-list>
+      
+      
+      
+      
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+          <ion-fab-button (click)="openModal()">
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      
+        <ion-modal [keepContentsMounted]="true" [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false">
+          <ng-template>
+            <ion-header>
+              <ion-toolbar>
+                <ion-title>Cadastrar Consulta</ion-title>
+                <ion-buttons slot="end">
+                  <ion-button (click)="isModalOpen = false">Fechar</ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-header>
+      
+            <ion-content>
+                   
+              <ion-item>
+                <ion-label position="stacked">Título da Consulta</ion-label>
+                <ion-input type="text" [(ngModel)]="consulta.titulo"></ion-input>
+              </ion-item>
+      
+              <ion-item>
+                <ion-label position="stacked">Nome do Médico</ion-label>
+                <ion-input type="text" [(ngModel)]="consulta.medico"></ion-input>
+              </ion-item>
+      
+              <ion-item>
+                <ion-label position="stacked">Data e Hora da Consulta</ion-label>
+                <ion-datetime [(ngModel)]="consulta.dataHora"></ion-datetime>
+              </ion-item>
+      
+              <ion-item>
+                <ion-label position="stacked">Localização</ion-label>
+                <ion-input type="text" [(ngModel)]="consulta.localizacao"></ion-input>
+              </ion-item>
+      
+              <ion-item>
+                <ion-label position="stacked">Observações</ion-label>
+                <ion-textarea [(ngModel)]="consulta.observacoes"></ion-textarea>
+              </ion-item>
+      
+              <ion-button expand="block" (click)="salvarConsulta()">Salvar Consulta</ion-button>
+            </ion-content>
+          </ng-template>
+        </ion-modal>
+      </ion-content>
+    </ion-tab>
+  </ion-tabs>
 </ion-content>

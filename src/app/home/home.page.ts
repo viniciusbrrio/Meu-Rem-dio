@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
-import { AddUserModalPage } from '../add-user-modal/add-user-modal.page'; // Modal que adiciona utilizador
+import { AddUserModalPage } from '../add-user-modal/add-user-modal.page';
 import { UserService } from '../services/user.service';
 import { User } from '../models/user.model';
-import { AngularFirestore } from '@angular/fire/compat/firestore'; // Importar Firestore para integração com o Firebase
-import { firstValueFrom } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage-angular';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
   selector: 'app-home',
@@ -13,38 +14,35 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-  users: User[] = []; // Lista de utilizadores
+  users: User[] = [];
 
   constructor(
     private modalController: ModalController,
     private alertController: AlertController,
     private userService: UserService,
     private firestore: AngularFirestore,
-    private router: Router // Injetar Router
+    private storage: Storage,
+    private router: Router,
+    private afAuth: AngularFireAuth
   ) {}
 
   async ngOnInit() {
-    // Carregar os utilizadores da base de dados Firebase ao iniciar a página
+    await this.storage.create();
     this.loadUsers();
   }
 
   // Método para abrir o modal de adicionar utilizador
   async openAddUserModal() {
     const modal = await this.modalController.create({
-      component: AddUserModalPage, // Modal onde o utilizador é adicionado
+      component: AddUserModalPage,
     });
 
     modal.onDidDismiss().then(async (result) => {
       if (result.data) {
-        // O resultado contém os dados do novo utilizador
         const newUser: User = result.data;
-
-        // Adicionar o novo utilizador ao Firebase
-        const id = this.firestore.createId(); // Gerar ID único para o utilizador
+        const id = this.firestore.createId();
         await this.firestore.collection('users').doc(id).set({ ...newUser, id });
-
-        // Atualizar a lista de utilizadores localmente
-        this.loadUsers(); // Recarregar a lista após adicionar o utilizador
+        this.loadUsers();
       }
     });
 
@@ -55,9 +53,9 @@ export class HomePage implements OnInit {
   loadUsers() {
     this.firestore
       .collection<User>('users')
-      .valueChanges({ idField: 'id' }) // Recupera a lista de utilizadores, incluindo o ID do Firestore
+      .valueChanges({ idField: 'id' })
       .subscribe((users) => {
-        this.users = users; // Atualiza a lista local de utilizadores
+        this.users = users;
       });
   }
 
@@ -84,7 +82,7 @@ export class HomePage implements OnInit {
         {
           text: 'Excluir',
           handler: async () => {
-            await this.deleteUser(user); // Executar a exclusão
+            await this.deleteUser(user);
           },
         },
       ],
@@ -96,6 +94,18 @@ export class HomePage implements OnInit {
   // Excluir utilizador do Firebase
   async deleteUser(user: User) {
     await this.firestore.collection('users').doc(user.id).delete();
-    this.loadUsers(); // Recarregar a lista de utilizadores após a exclusão
+    this.loadUsers();
+  }
+
+  // Método de logout
+  async logout() {
+    await this.afAuth.signOut();
+    await this.storage.clear();
+    this.router.navigate(['/login']);
   }
 }
+
+
+
+
+

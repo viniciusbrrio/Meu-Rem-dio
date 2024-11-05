@@ -4,12 +4,117 @@
     gap: 16px;
   }
   
-  ion-searchbar {
-    margin: 16px;
-  }
   /* anotações.page.scss */
 .searchbar {
     --padding-start: 16px;  /* ajuste o valor conforme necessário */
     --padding-end: 16px;    /* ajuste o valor conforme necessário */
   }
   
+  // Personalização do ion-header
+ion-header {
+  ion-toolbar {
+    //--background: #20A0B1;
+
+    ion-title {
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    ion-back-button {
+      color: white;
+    }
+  }
+}
+
+// Estilo do ion-content
+ion-content {
+  --background: linear-gradient(135deg, #167D7F, #29A0B1, #98D7C2, #DDFFE7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  height: 100%;
+}
+
+// Estilo da lista de anotações
+ion-list {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+// Estilo dos itens da lista
+ion-item {
+  --background: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  color: #167D7F;
+
+  ion-label {
+    color: #167D7F;
+    font-size: 1rem;
+  }
+
+  h2 {
+    font-weight: bold;
+    color: #167D7F;
+    margin-bottom: 5px;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 0;
+  }
+}
+
+// Estilo dos botões
+ion-button {
+  --background: #167D7F;
+  --color: white;
+  --border-radius: 8px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.adicionar {
+  box-shadow: 0px 2px 4px rgba(3, 168, 233, 0.1);
+  border-radius: 5px;
+}
+// Estilo do ícone
+ion-icon {
+  font-size: 1.5rem;
+}
+
+// Estilo do botão FAB (se utilizado)
+ion-fab {
+  ion-fab-button {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+  // Tabs
+
+  ion-tab-bar {
+    --background: #20A0B1;
+  
+    ion-tab-button {
+      color: #FFFFFF;
+  
+      ion-icon, ion-label {
+        color: #FFFFFF;
+        transition: box-shadow 0.3s ease;
+      }
+  
+      &:hover {
+        ion-icon, ion-label {
+          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        }
+      }
+    }
+  }

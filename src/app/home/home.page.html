@@ -4,16 +4,19 @@
       <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
+
   <ion-content>
     <ion-list>
       <ion-item routerLink="/home">Home</ion-item>
       <ion-item routerLink="/perfil/:id">Perfil</ion-item>
+      <ion-item routerLink="/farmacias-proximas/:id">Farmácias Próximas</ion-item>
       <div class="spacer"></div>
-      <ion-item routerLink="">Logout</ion-item>
+      <ion-item (click)="logout()">Logout</ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>
 
+<!-- Cabeçalho Principal -->
 <ion-header [translucent]="true">
   <ion-toolbar style="--background: #20A0B1;">
     <ion-buttons slot="start">
@@ -23,40 +26,66 @@
     
     <ion-buttons slot="end">
       <ion-button routerLink="/perfil">
-        
+        <ion-img src="/assets/imagem/logo1.png" style="width: 40px; height: 40px;"></ion-img>
       </ion-button>
-      <ion-img src="/assets/imagem/logo1.png" style="width: 40px; height: 40px;"></ion-img>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content id="main-content">
-  <!-- Botão Flutuante para adicionar usuário -->
-  <ion-fab slot="fixed" horizontal="end" vertical="bottom">
-    <ion-fab-button style="--background: #20A0B1;" (click)="openAddUserModal()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 
-  <!-- Lista de usuários -->
-  <ion-list>
-    <ion-card *ngFor="let user of users" class="user-card">
-      <ion-card-header (click)="goToUserPanel(user)">
-        <ion-card-title class="card-title">{{ user.nome }}</ion-card-title>
-      </ion-card-header>
-      
-      <ion-card-content>
-        <ion-row>
-          <ion-col size="9">
-            <div>Idade: {{ user.idade }}</div>
-          </ion-col>
-          <ion-col size="3">
-            <ion-button expand="block" color="danger" (click)="confirmDeleteUser(user)">
-              <ion-icon slot="icon-only" name="trash"></ion-icon>
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-card-content>
-    </ion-card>
-  </ion-list>
+    <!-- Botão Flutuante para adicionar usuário -->
+    <ion-fab slot="fixed" horizontal="end" vertical="bottom">
+      <ion-fab-button style="--background: #20A0B1; margin-bottom: 55px;" (click)="openAddUserModal()">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+  <!-- Componente Tabs -->
+  <ion-tabs>
+    <ion-tab-bar slot="bottom" style="--background: #20A0B1;">
+      <ion-tab-button tab="home">
+        <ion-icon name="home-outline" style="color:#FFFFFF;"></ion-icon>
+        <ion-label>Home</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="farmacias">
+        <ion-icon name="medkit-outline" routerLink="/farmacias-proximas/:id"></ion-icon>
+        <ion-label>Farmácias</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="bulas">
+        <ion-icon name="document-text-outline" routerLink="/bula/:id"></ion-icon>
+        <ion-label>Bulas</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+
+    <!-- Conteúdo das Abas -->
+    <ion-tab tab="home">
+      <!-- Conteúdo da aba Perfil -->
+      <ion-content>
+        <ion-list>
+          <ion-card *ngFor="let user of users" class="user-card">
+            <ion-card-header (click)="goToUserPanel(user)">
+              <ion-card-title class="card-title">{{ user.nome }}</ion-card-title>
+            </ion-card-header>
+            
+            <ion-card-content>
+              <ion-row>
+                <ion-col size="9">
+                  <div>Idade: {{ user.idade }}</div>
+                </ion-col>
+                <ion-col size="3">
+                  <ion-button expand="block" color="danger" (click)="confirmDeleteUser(user)">
+                    <ion-icon slot="icon-only" name="trash"></ion-icon>
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ion-card>
+        </ion-list>
+      </ion-content>
+    </ion-tab>
+    
+  </ion-tabs>
 </ion-content>

@@ -12,7 +12,10 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { environment } from '../environments/environment'; // Make sure this path is correct
+import { environment } from '../environments/environment';
+import { PerfilService } from './services/perfil.service';
+import { NotificationsService } from './services/notifications.service';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,7 +31,11 @@ import { environment } from '../environments/environment'; // Make sure this pat
     AngularFireAuthModule, // Firebase Auth module
   ],
   providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    NotificationsService, AuthService,
+    {
+      provide: RouteReuseStrategy,
+      useClass: IonicRouteStrategy
+    } 
   ],
   bootstrap: [AppComponent],
 })

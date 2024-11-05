@@ -1,5 +1,4 @@
 <ion-header>
- 
 </ion-header>
 
 <ion-content>
@@ -41,6 +40,7 @@
           <!-- Data de Nascimento -->
           <ion-item>
             <ion-label style="color: #167D7F;" position="floating">Data de Nascimento</ion-label>
+            <br>
             <ion-datetime displayFormat="DD/MM/YYYY" formControlName="dataNascimento" required></ion-datetime>
           </ion-item>
           <div *ngIf="registerForm.controls['dataNascimento'].invalid && registerForm.controls['dataNascimento'].touched">
@@ -110,6 +110,7 @@
     </ion-card>
   </div>
 </ion-content>
+
 
 
 

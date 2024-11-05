@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { PerfilService } from '../services/perfil.service';
 import { ToastController } from '@ionic/angular';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+
 
 interface UserProfile {
   nome: string;
   sobrenome: string;
-  email: string;
   dataNascimento: string;
-  bairro: string;
   estado: string;
+  bairro: string;
+  email: string;
+  userId: string;
 }
 
 @Component({
@@ -21,15 +23,16 @@ export class PerfilPage implements OnInit {
   userProfile: UserProfile = {
     nome: '',
     sobrenome: '',
-    email: '',
     dataNascimento: '',
     bairro: '',
-    estado: ''
+    estado: '',
+    email: '',
+    userId: ''
   };
 
   constructor(
+    private perfilService: PerfilService,
     private auth: AngularFireAuth,
-    private firestore: AngularFirestore,
     private toastController: ToastController
   ) {}
 
@@ -37,49 +40,35 @@ export class PerfilPage implements OnInit {
     this.loadUserProfile();
   }
 
-  // Carrega os dados do perfil a partir da coleção "cadastro"
   async loadUserProfile() {
     const user = await this.auth.currentUser;
     if (user) {
-      // Agora estamos a buscar os dados na coleção "cadastro"
-      this.firestore.collection('cadastro').doc(user.uid).get().subscribe(
-        (doc) => {
-          if (doc.exists) {
-            const data = doc.data() as UserProfile;
-            this.userProfile = {
-              nome: data.nome || '',
-              sobrenome: data.sobrenome || '',
-              email: data.email || '',
-              dataNascimento: data.dataNascimento || '',
-              bairro: data.bairro || '',
-              estado: data.estado || ''
-            };
-          }
+      this.perfilService.getUserProfile(user.uid).subscribe(
+        (profile) => {
+          this.userProfile = profile;
         },
         (error) => {
-          console.error('Erro ao carregar o perfil do usuário:', error);
-          this.presentToast('Erro ao carregar o perfil do usuário.');
+          console.error('Erro ao carregar perfil:', error);
+          this.presentToast('Erro ao carregar perfil.');
         }
       );
     }
   }
 
-  // Salva as alterações no perfil de utilizador na coleção "cadastro"
   async saveProfile() {
     const user = await this.auth.currentUser;
     if (user) {
-      this.firestore.collection('cadastro').doc(user.uid).set(this.userProfile)
+      this.perfilService.updateUserProfile(user.uid, this.userProfile)
         .then(() => {
           this.presentToast('Perfil atualizado com sucesso!');
         })
         .catch((error) => {
-          console.error('Erro ao atualizar o perfil:', error);
-          this.presentToast('Erro ao atualizar o perfil.');
+          console.error('Erro ao atualizar perfil:', error);
+          this.presentToast('Erro ao atualizar perfil.');
         });
     }
   }
 
-  // Exibe um toast com mensagens de sucesso ou erro
   async presentToast(message: string) {
     const toast = await this.toastController.create({
       message: message,

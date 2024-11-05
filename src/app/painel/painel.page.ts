@@ -47,8 +47,4 @@ export class PainelPage implements OnInit {
     }
   }
 
-  // Navegar para a página de medicamentos com o ID do utilizador
-  goToUserMedicamentos(user: User) {
-    this.router.navigate(['/medicamentos', user.id]);
-  }
 }

@@ -33,8 +33,8 @@ const routes: Routes = [
     loadChildren: () => import('./add-medicamento-modal/add-medicamento-modal.module').then( m => m.AddMedicamentoModalPageModule)
   },
   {
-    path: 'receitas/:id',
-    loadChildren: () => import('./receitas/receitas.module').then( m => m.ReceitasPageModule)
+    path: 'controle-receitas/:id',
+    loadChildren: () => import('./controle-receitas/receitas.module').then( m => m.ReceitasPageModule)
   },
   {
     path: 'consulta/:id',
@@ -52,6 +52,14 @@ const routes: Routes = [
     path: 'anotacoes/:id',
     loadChildren: () => import('./anotacoes/anotacoes.module').then( m => m.AnotacoesPageModule)
   },
+  {
+    path: 'farmacias-proximas/:id',
+    loadChildren: () => import('./farmacias-proximas/farmacias-proximas.module').then(m => m.FarmaciasProximasPageModule)
+  },
+  {
+    path: 'bula/:id',
+    loadChildren: () => import('./bula/bula.module').then( m => m.BulaPageModule)
+  },
   
 ];
 
@@ -63,3 +71,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+
