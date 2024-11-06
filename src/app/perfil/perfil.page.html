@@ -1,33 +1,29 @@
-<ion-menu side="start" menuId="first" contentId="main-content">
-  <ion-header>
-    <ion-toolbar style="--background: #20A0B1;">
-      <ion-title>Menu</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <ion-list>
-      <ion-item routerLink="/home">Home</ion-item>
-      <ion-item routerLink="/perfil">Perfil</ion-item>
-    </ion-list>
-  </ion-content>
-</ion-menu>
-
 <ion-header [translucent]="true">
   <ion-toolbar style="--background: #20A0B1;">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      Perfil
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-back-button defaultHref="/painel"></ion-back-button>
-    </ion-buttons>
+    
+    <ion-title>Perfil</ion-title>
+
+      <!-- Botão de Voltar -->
+      <ion-buttons slot="end">
+        <ion-back-button defaultHref="/painel:id"></ion-back-button>
+      </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <form (ngSubmit)="saveProfile()">
+  <div *ngIf="carregando" class="carregando">
+    <ion-spinner></ion-spinner>
+    <p>Carregando perfil...</p>
+  </div>
+
+  <div *ngIf="erro" class="erro-container">
+    <ion-text color="danger">
+      {{ erro }}
+    </ion-text>
+  </div>
+
+  <form *ngIf="!carregando && !erro">
     <ion-item>
       <ion-label position="floating">Nome</ion-label>
       <ion-input [(ngModel)]="userProfile.nome" name="nome" readonly></ion-input>
@@ -45,22 +41,17 @@
 
     <ion-item>
       <ion-label position="floating">Data de Nascimento</ion-label>
-      <ion-input type="date" [(ngModel)]="userProfile.dataNascimento" name="dataNascimento" required></ion-input>
+      <ion-input type="date" [(ngModel)]="userProfile.dataNascimento" name="dataNascimento" readonly></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Bairro</ion-label>
-      <ion-input [(ngModel)]="userProfile.bairro" name="bairro" required></ion-input>
+      <ion-input [(ngModel)]="userProfile.bairro" name="bairro" readonly></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Estado</ion-label>
-      <ion-input [(ngModel)]="userProfile.estado" name="estado" required></ion-input>
+      <ion-input [(ngModel)]="userProfile.estado" name="estado" readonly></ion-input>
     </ion-item>
-
-    <ion-button expand="full" type="submit">
-      Salvar Perfil
-    </ion-button>
   </form>
 </ion-content>
-

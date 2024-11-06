@@ -35,7 +35,7 @@
               <ion-label>
                 <h2>{{ item.titulo }}</h2>
                 <p><strong>Médico:</strong> {{ item.medico }}</p>
-                <p><strong>Data e Hora:</strong> {{ item.dataHora }}</p>
+                <p><strong>Data e Hora:</strong> {{ item.dataHora| date:'dd/MM/yyyy - HH:mm'}}</p>
                 <p><strong>Localização:</strong> {{ item.localizacao }}</p>
                 <p><strong>Observações:</strong> {{ item.observacoes }}</p>
               </ion-label>

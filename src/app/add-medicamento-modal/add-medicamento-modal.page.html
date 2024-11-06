@@ -43,13 +43,10 @@
     </ion-item>
 
     <!-- Botão para abrir o seletor de data e hora de início -->
-    <ion-item lines="none">
-      <ion-label>Data e Hora de Início</ion-label>
-      <ion-datetime-button datetime="datetime"></ion-datetime-button>
+    <ion-item>
+      <ion-label position="floating">Data de Início</ion-label>
+      <ion-datetime formControlName="dataInicio" display-format="YYYY-MM-DD" picker-format="YYYY-MM-DD" required></ion-datetime>
     </ion-item>
-    <ion-text *ngIf="medicamentoForm.value.dataInicio">
-      {{ medicamentoForm.value.dataInicio | date: 'short' }}
-    </ion-text>
 
     <!-- Modal do ion-datetime -->
     <ion-modal [keepContentsMounted]="true">

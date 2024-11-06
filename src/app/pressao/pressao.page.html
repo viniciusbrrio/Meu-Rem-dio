@@ -43,7 +43,7 @@
         <ion-list>
           <ion-item *ngFor="let nota of pressaoFiltradas">
             <ion-label>
-              <h2>{{ formatarDataHora(nota.dataHora) }}</h2>
+              <h2>{{ formatarDataHora(nota.dataHora) | date:'dd/MM/yyyy - HH:mm'}}</h2>
               <p>Sístole (max): {{ nota.sistole }}</p>
               <p>Diástole (min): {{ nota.diastole }}</p>
             </ion-label>

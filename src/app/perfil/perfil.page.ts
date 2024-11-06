@@ -1,18 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PerfilService } from '../services/perfil.service';
-import { ToastController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-
-
-interface UserProfile {
-  nome: string;
-  sobrenome: string;
-  dataNascimento: string;
-  estado: string;
-  bairro: string;
-  email: string;
-  userId: string;
-}
+import { CadastroService } from '../services/cadastro.service';
 
 @Component({
   selector: 'app-perfil',
@@ -20,62 +8,60 @@ interface UserProfile {
   styleUrls: ['./perfil.page.scss'],
 })
 export class PerfilPage implements OnInit {
-  userProfile: UserProfile = {
+  userProfile: any = {
     nome: '',
     sobrenome: '',
+    email: '',
     dataNascimento: '',
     bairro: '',
-    estado: '',
-    email: '',
-    userId: ''
+    estado: ''
   };
+  carregando: boolean = true;
+  erro: string | null = null;
 
   constructor(
-    private perfilService: PerfilService,
-    private auth: AngularFireAuth,
-    private toastController: ToastController
+    private afAuth: AngularFireAuth,
+    private cadastroService: CadastroService
   ) {}
 
   ngOnInit() {
-    this.loadUserProfile();
+    this.carregarDadosPerfil();
   }
 
-  async loadUserProfile() {
-    const user = await this.auth.currentUser;
-    if (user) {
-      this.perfilService.getUserProfile(user.uid).subscribe(
-        (profile) => {
-          this.userProfile = profile;
-        },
-        (error) => {
-          console.error('Erro ao carregar perfil:', error);
-          this.presentToast('Erro ao carregar perfil.');
-        }
-      );
-    }
-  }
+  async carregarDadosPerfil() {
+    this.carregando = true;
+    this.erro = null;
 
-  async saveProfile() {
-    const user = await this.auth.currentUser;
-    if (user) {
-      this.perfilService.updateUserProfile(user.uid, this.userProfile)
-        .then(() => {
-          this.presentToast('Perfil atualizado com sucesso!');
-        })
-        .catch((error) => {
-          console.error('Erro ao atualizar perfil:', error);
-          this.presentToast('Erro ao atualizar perfil.');
+    try {
+      const user = await this.afAuth.currentUser; // Obtém o usuário autenticado
+      const userId = user?.uid; // Pega o ID do usuário
+
+      if (userId) {
+        // Busca o perfil do usuário usando o userId
+        this.cadastroService.getCadastros(userId).subscribe({
+          next: (dados) => {
+            if (dados) {
+              this.userProfile = dados; // Atualiza o perfil com os dados do Firestore
+            }
+            this.carregando = false;
+          },
+          error: (error) => {
+            console.error('Erro ao carregar perfil:', error);
+            this.erro = 'Erro ao carregar os dados do perfil. Tente novamente.';
+            this.carregando = false;
+          }
         });
+      } else {
+        this.erro = 'Usuário não autenticado.';
+        this.carregando = false;
+      }
+    } catch (error) {
+      console.error('Erro ao obter usuário autenticado:', error);
+      this.erro = 'Erro ao carregar os dados do perfil. Tente novamente.';
+      this.carregando = false;
     }
-  }
-
-  async presentToast(message: string) {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      position: 'bottom'
-    });
-    toast.present();
   }
 }
+
+
 

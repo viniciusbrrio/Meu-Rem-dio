@@ -1,4 +1,5 @@
 import type { CapacitorConfig } from '@capacitor/cli';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',

@@ -1,7 +1,5 @@
-// src/app/pages/bula/bula.page.ts
 import { Component } from '@angular/core';
-import { BulaService } from '../services/bula.service';
-import { Bula } from '../interfaces/bula.interface';
+import { OpenFDAService } from '../services/open-fda.service'; // Alterado para o OpenFDAService
 import { LoadingController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -13,13 +11,13 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 })
 export class BulaPage {
   termoPesquisa: string = '';
-  bula: Bula[] = [];
+  bula: any[] = [];  // Atualizado para usar qualquer estrutura retornada pela API
   carregando: boolean = false;
   erro: string | null = null;
   private pesquisaSubject = new Subject<string>();
 
   constructor(
-    private bulaService: BulaService,
+    private openFDAService: OpenFDAService,  // Alterado para o OpenFDAService
     private loadingCtrl: LoadingController
   ) {
     this.configurarPesquisa();
@@ -49,10 +47,16 @@ export class BulaPage {
     this.carregando = true;
     this.erro = null;
 
-    this.bulaService.buscarBula(termo)
+    // Chama o método buscarMedicamento do OpenFDAService
+    this.openFDAService.buscarMedicamento(termo)
       .subscribe({
         next: (resultado) => {
-          this.bula = resultado;
+          this.bula = resultado.map((item: any) => ({
+            name: item.openfda.brand_name ? item.openfda.brand_name[0] : 'Unknown', 
+            activeIngredient: item.active_ingredient ? item.active_ingredient[0] : 'Not specified', 
+            labeler: item.openfda.manufacturer_name ? item.openfda.manufacturer_name[0] : 'Unknown',
+            pdfUrl: `https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&ApplNo=${item.id}`
+          }));
           loading.dismiss();
           this.carregando = false;
         },
@@ -65,23 +69,21 @@ export class BulaPage {
       });
   }
 
-  abrirBula(bula: Bula) {
-    if (bula.pdfUrl) {
-      window.open(bula.pdfUrl, '_blank');
+  abrirBula(med: any) {
+    if (med.pdfUrl) {
+      window.open(med.pdfUrl, '_blank');
     }
   }
 
-  async verDetalhes(bula: Bula) {
+  async verDetalhes(med: any) {
     const loading = await this.loadingCtrl.create({
       message: 'Loading details...'
     });
     await loading.present();
 
-    this.bulaService.obterDetalhes(bula.setId)
+    this.openFDAService.buscarEfeitosColaterais(med.id)
       .subscribe({
         next: (detalhes) => {
-          // Aqui você pode implementar a lógica para mostrar os detalhes
-          // Por exemplo, abrir um modal com as informações
           console.log('Detalhes:', detalhes);
           loading.dismiss();
         },

@@ -5,6 +5,7 @@ export interface Medicamento {
   dosagem: string;
   qnt: number;
   dias: number;
+  dataInicio: string;
   horario: string; // Pode ser string ou Date
   userId: string;
   }

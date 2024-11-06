@@ -6,6 +6,7 @@ import { UserService } from '../services/user.service';
 import { ConsultaService } from '../services/consulta.service';
 import { User } from '../models/user.model';
 import { Consulta } from '../interfaces/consulta.interface';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 @Component({
   selector: 'app-consulta',
@@ -67,18 +68,22 @@ export class ConsultaPage implements OnInit {
         ...this.consulta,
         userId: this.user.id, // Associa o ID do usuário
       };
-
+  
       try {
         const docRef = await this.firestore.collection('consultas').add(novaConsulta);
         console.log('Consulta salva com sucesso!', docRef.id);
         this.consultasList.push({ id: docRef.id, ...novaConsulta });
         this.isModalOpen = false; // Fecha o modal após salvar
         this.limparFormulario(); // Limpa o formulário
+  
+        // Agendar a notificação
+        await this.agendarNotificacao(novaConsulta);
       } catch (error) {
         console.error('Erro ao salvar a consulta:', error);
       }
     }
   }
+  
 
   limparFormulario() {
     this.consulta = {
@@ -94,7 +99,7 @@ export class ConsultaPage implements OnInit {
   async cancelarTarefa(consulta: Consulta) {
     const alert = await this.alertController.create({
       header: 'Confirmar Exclusão',
-      message: `Deseja realmente excluir a consulta "${consulta.titulo}"?`,
+      message: `Deseja realmente excluir a consulta ${consulta.titulo}?`,
       buttons: [
         {
           text: 'Cancelar',
@@ -115,6 +120,30 @@ export class ConsultaPage implements OnInit {
     await alert.present();
   }
 
+  // Método para agendar notificação três horas antes da consulta
+  async agendarNotificacao(consulta: Consulta) {
+    const dataHoraConsulta = new Date(consulta.dataHora);
+    const tresHorasAntes = new Date(dataHoraConsulta.getTime() - 3 * 60 * 60 * 1000);
+
+    await LocalNotifications.requestPermissions(); // Solicita permissão para enviar notificações
+
+    await LocalNotifications.schedule({
+      notifications: [
+        {
+          id: new Date().getTime(),
+          title: `Lembrete de Consulta: ${consulta.titulo}`,
+          body: `Consulta com ${consulta.medico} às ${dataHoraConsulta.toLocaleString()}`,
+          schedule: { at: tresHorasAntes },
+          extra: {
+            medico: consulta.medico,
+            dataHora: consulta.dataHora,
+            localizacao: consulta.localizacao,
+            observacoes: consulta.observacoes,
+          }
+        }
+      ]
+    });
+  }
 }
 
 

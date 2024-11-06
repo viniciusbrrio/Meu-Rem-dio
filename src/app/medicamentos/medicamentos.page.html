@@ -4,7 +4,7 @@
 
     <!-- Botão de Voltar -->
     <ion-buttons slot="end">
-      <ion-back-button defaultHref="/painel:id"></ion-back-button>
+      <ion-back-button defaultHref="/painel/:id"></ion-back-button>
     </ion-buttons>
 
   </ion-toolbar>
@@ -46,7 +46,7 @@
                 <p>{{ medicamento.tipo }}</p>
                 <p>{{ medicamento.dosagem }} de {{ medicamento.qnt }}/{{ medicamento.qnt }} hrs.</p>
                 <p>Durante {{ medicamento.dias }} dias.</p>
-                <p>Início do tratamento: {{ medicamento.horario }}</p>
+                <p>Início do tratamento: {{ medicamento.dataInicio | date:'dd/MM/yyyy - HH:mm' }}</p>
               </ion-label>
               <ion-button (click)="cancelarTarefa(medicamento)">Finalizar</ion-button>
       

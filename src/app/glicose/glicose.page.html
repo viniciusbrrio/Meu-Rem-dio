@@ -43,7 +43,7 @@
       <ion-list>
         <ion-item *ngFor="let nota of glicoseFiltradas">
           <ion-label>
-            <h2>{{ formatarDataHora(nota.dataHora) }}</h2>
+            <h2>{{ formatarDataHora(nota.dataHora) | date:'dd/MM/yyyy - HH:mm' }}</h2>
             <p>{{ nota.conteudo }}</p>
           </ion-label>
           <ion-buttons slot="end">

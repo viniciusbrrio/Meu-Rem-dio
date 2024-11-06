@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 
 // Interface para o cadastro de utilizadores
 interface Cadastro {
+  Id?: string;
   nome: string;
   sobrenome: string;
   dataNascimento: string;
