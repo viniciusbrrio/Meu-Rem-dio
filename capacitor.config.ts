@@ -9,7 +9,7 @@ plugins: {
   LocalNotifications: {
     smallIcon: "ic_notification",
     iconColor: "#488AFF",
-    sound: "beep.wav"
+    sound: "assets/sounds/beep.wav"
   }
 }
 };

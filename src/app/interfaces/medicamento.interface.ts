@@ -8,4 +8,5 @@ export interface Medicamento {
   dataInicio: string;
   horario: string; // Pode ser string ou Date
   userId: string;
+  notificationId?: number;
   }

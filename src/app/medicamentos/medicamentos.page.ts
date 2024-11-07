@@ -1,7 +1,5 @@
-//medicamentos.page.ts
-
 import { Component, OnInit } from '@angular/core';
-import { ModalController, AlertController } from '@ionic/angular';
+import { ModalController, AlertController, NavController } from '@ionic/angular';
 import { AddMedicamentoModalPage } from '../add-medicamento-modal/add-medicamento-modal.page';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { ActivatedRoute } from '@angular/router';
@@ -10,9 +8,7 @@ import { MedicamentoService } from '../services/medicamento.service';
 import { User } from '../models/user.model';
 import { AngularFirestore } from '@angular/fire/compat/firestore'; // Firebase Firestore
 import { Observable } from 'rxjs';
-import { NotificationsService } from '../services/notifications.service';
 import { Medicamento } from '../interfaces/medicamento.interface';
-
 
 @Component({
   selector: 'app-medicamentos',
@@ -21,40 +17,44 @@ import { Medicamento } from '../interfaces/medicamento.interface';
 })
 export class MedicamentosPage implements OnInit {
   medicamentos: Medicamento[] = [];
-  user: User | undefined; // Usuário que será recuperado
-  user$: Observable<User | undefined> | undefined; // Para uso com async pipe no template, se necessário
+  user: User | undefined;
+  user$: Observable<User | undefined> | undefined;
 
   constructor(
-    private notificationsService: NotificationsService,
     private modalController: ModalController,
     private alertController: AlertController,
     private medicamentoService: MedicamentoService,
     private route: ActivatedRoute,
     private userService: UserService,
-    private firestore: AngularFirestore // Injetar Firestore
+    private firestore: AngularFirestore,
+    private navCtrl: NavController
   ) {}
 
   ngOnInit() {
     const userId = this.route.snapshot.paramMap.get('id');
     if (userId) {
-      // Substitui await por subscribe, já que getUserById retorna um Observable
       this.userService.getUserById(userId).subscribe(user => {
-        this.user = user;  // Atribui o valor do Observable a 'this.user'
+        this.user = user;
         if (this.user) {
-          this.loadMedicamentos(this.user.id); // Carrega os medicamentos se o usuário estiver definido
+          this.loadMedicamentos(this.user.id);
         }
       });
     }
   }
 
-  // Carregar medicamentos do Firestore
+  // Carregar medicamentos do Firestore com tratamento de erro
   loadMedicamentos(userId: string) {
     this.firestore
       .collection<Medicamento>('medicamentos', ref => ref.where('userId', '==', userId))
-      .valueChanges({ idField: 'id' }) // Recupera o ID do documento no Firestore
-      .subscribe((medicamentos) => {
-        this.medicamentos = medicamentos;
-      });
+      .valueChanges({ idField: 'id' })
+      .subscribe(
+        (medicamentos) => {
+          this.medicamentos = medicamentos;
+        },
+        (error) => {
+          console.error('Erro ao carregar medicamentos:', error);
+        }
+      );
   }
 
   // Abrir modal para adicionar novo medicamento
@@ -62,7 +62,7 @@ export class MedicamentosPage implements OnInit {
     const modal = await this.modalController.create({
       component: AddMedicamentoModalPage,
       componentProps: {
-        user: this.user, // Passa o usuário para o modal
+        user: this.user,
       },
     });
 
@@ -72,8 +72,8 @@ export class MedicamentosPage implements OnInit {
 
         // Verificar se o medicamento já existe
         if (!this.medicamentoExiste(medicamento.nome)) {
-          await this.medicamentoService.addMedicamento(medicamento); // Adiciona ao Firestore
-          this.scheduleReminder(medicamento);  // Agenda o lembrete
+          await this.medicamentoService.addMedicamento(medicamento);
+          this.scheduleReminder(medicamento);
         }
       }
     });
@@ -100,8 +100,18 @@ export class MedicamentosPage implements OnInit {
         {
           text: 'Excluir',
           handler: async () => {
-            if (medicamento.id) {
-              await this.medicamentoService.removeMedicamento(medicamento.id); // Passa o ID correto para exclusão
+            try {
+              if (medicamento.id) {
+                // Cancela a notificação associada ao medicamento
+                if (medicamento.notificationId) {
+                  await LocalNotifications.cancel({ notifications: [{ id: medicamento.notificationId }] });
+                }
+                await this.medicamentoService.removeMedicamento(medicamento.id);
+                console.log('Medicamento excluído com sucesso');
+              }
+            } catch (error) {
+              console.error('Erro ao excluir medicamento:', error);
+              this.showErrorAlert('Erro ao excluir medicamento');
             }
           },
         },
@@ -111,26 +121,54 @@ export class MedicamentosPage implements OnInit {
     await alert.present();
   }
 
+  // Exibir alertas de erro
+  async showErrorAlert(message: string) {
+    const alert = await this.alertController.create({
+      header: 'Erro',
+      message,
+      buttons: ['OK'],
+    });
+    await alert.present();
+  }
+
+  // Navegar para a página de alertas do medicamento
+  irParaAlertas(medicamento: Medicamento) {
+    this.navCtrl.navigateForward(`/alertas/:id`);
+  }
+
   // Agendar lembrete para tomar o medicamento
   async scheduleReminder(medicamento: Medicamento) {
-    const horario = new Date(medicamento.horario); // Converte para Date
-    if (!isNaN(horario.getTime())) { // Verifica se a data é válida
+    const horario = new Date(medicamento.horario);
+    if (!isNaN(horario.getTime())) {
+      const notificationId = parseInt(medicamento.id!, 10) + Date.now(); // Usa o "!" para indicar que id não é undefined
+
       await LocalNotifications.schedule({
         notifications: [
           {
-            id: Date.now(),
+            id: notificationId,
             title: `Hora de tomar o medicamento: ${medicamento.nome}`,
             body: `Tipo: ${medicamento.tipo}, Dosagem: ${medicamento.dosagem}`,
             schedule: { at: horario },
-            sound: undefined,
+            sound: "assets/sounds/beep.wav", // Definir caminho do som
+            smallIcon: "ic_launcher",
           },
         ],
       });
+
+      // Salvar o ID da notificação no medicamento
+      if (medicamento.id) {
+        medicamento.notificationId = notificationId;
+        await this.medicamentoService.updateMedicamento(medicamento.id, { notificationId });
+      } else {
+        console.error("Erro: o ID do medicamento está indefinido.");
+      }
     } else {
       console.error('Horário inválido para o lembrete:', medicamento.horario);
     }
   }
 }
+
+
 
 
 

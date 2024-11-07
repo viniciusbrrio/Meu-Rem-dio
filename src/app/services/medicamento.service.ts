@@ -12,6 +12,7 @@ interface Medicamento {
   horario: string;
   concluido?: boolean;
   userId: string;
+  notificationId?: number;
 }
 
 @Injectable({
@@ -55,6 +56,13 @@ export class MedicamentoService {
     const medicamentoDoc = this.firestore.doc(`${this.collectionName}/${id}`);
     await medicamentoDoc.update({ concluido: true });
   }
+
+  // Método para atualizar medicamento, incluindo o notificationId
+  async updateMedicamento(id: string, data: Partial<Medicamento>) {
+    return this.firestore.collection('medicamentos').doc(id).update(data);
+  }
+
+  
 }
 
 

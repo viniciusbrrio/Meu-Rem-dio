@@ -60,6 +60,10 @@ const routes: Routes = [
     path: 'bula/:id',
     loadChildren: () => import('./bula/bula.module').then( m => m.BulaPageModule)
   },
+  {
+    path: 'alertas/:id',
+    loadChildren: () => import('./alertas/alertas.module').then( m => m.AlertasPageModule)
+  },
   
 ];
 

@@ -48,6 +48,7 @@
                 <p>Durante {{ medicamento.dias }} dias.</p>
                 <p>Início do tratamento: {{ medicamento.dataInicio | date:'dd/MM/yyyy - HH:mm' }}</p>
               </ion-label>
+              <ion-button (click)="irParaAlertas(medicamento)">Horários</ion-button>
               <ion-button (click)="cancelarTarefa(medicamento)">Finalizar</ion-button>
       
             </ion-item>

@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Alertas</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/medicamentos"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let alerta of alertas">
+      <ion-label>
+        <h2>Lembrete: {{ alerta.horario | date: 'HH:mm' }}</h2>
+      </ion-label>
+      <ion-button (click)="removerAlerta(alerta)">Remover</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <!-- Botão flutuante para adicionar novo horário -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="adicionarAlerta()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
