@@ -133,51 +133,40 @@ export class MedicamentosPage implements OnInit {
 
   // Navegar para a página de alertas do medicamento
   irParaAlertas(medicamento: Medicamento) {
-    this.navCtrl.navigateForward(`/alertas/:id`);
+    if (medicamento.id) {
+      this.navCtrl.navigateForward(`/alertas/${medicamento.id}`);
+    } else {
+      console.error('Medicamento não possui um ID válido.');
+    }
   }
 
   // Agendar lembrete para tomar o medicamento
   async scheduleReminder(medicamento: Medicamento) {
     const horario = new Date(medicamento.horario);
-    if (!isNaN(horario.getTime())) {
-      const notificationId = parseInt(medicamento.id!, 10) + Date.now(); // Usa o "!" para indicar que id não é undefined
-
+    const agora = new Date();
+  
+    if (!isNaN(horario.getTime()) && horario > agora) {
+      const notificationId = parseInt(medicamento.id!, 10) + Date.now();
+  
       await LocalNotifications.schedule({
         notifications: [
           {
             id: notificationId,
-            title: `Hora de tomar o medicamento: ${medicamento.nome}`,
-            body: `Tipo: ${medicamento.tipo}, Dosagem: ${medicamento.dosagem}`,
+            title: `Hora de tomar ${medicamento.nome}`,
+            body: `Dosagem: ${medicamento.dosagem}`,
             schedule: { at: horario },
-            sound: "assets/sounds/beep.wav", // Definir caminho do som
-            smallIcon: "ic_launcher",
+            sound: 'assets/sounds/beep.wav',
+            smallIcon: 'ic_launcher',
           },
         ],
       });
-
-      // Salvar o ID da notificação no medicamento
+  
       if (medicamento.id) {
         medicamento.notificationId = notificationId;
         await this.medicamentoService.updateMedicamento(medicamento.id, { notificationId });
-      } else {
-        console.error("Erro: o ID do medicamento está indefinido.");
       }
     } else {
-      console.error('Horário inválido para o lembrete:', medicamento.horario);
+      console.error('Horário inválido ou no passado para o lembrete:', medicamento.horario);
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -2,18 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-interface Medicamento {
-  nome: string;
-  tipo: string;
-  dosagem: string;
-  qnt: number;
-  dias: number;
-  horario: string;
-  concluido?: boolean;
-  userId: string;
-  notificationId?: number;
-}
+import { Medicamento } from '../models/medicamento.model';  // Apenas a importação
 
 @Injectable({
   providedIn: 'root',
@@ -62,11 +51,24 @@ export class MedicamentoService {
     return this.firestore.collection('medicamentos').doc(id).update(data);
   }
 
-  
+  // Método para obter medicamento por ID, com verificação de doc
+  async getMedicamentoById(id: string): Promise<Medicamento | null> {
+    try {
+      const doc = await this.firestore.collection('medicamentos').doc(id).get().toPromise();
+
+      // Verificação se o documento existe
+      if (!doc || !doc.exists) {
+        console.error('Medicamento não encontrado');
+        return null;  // Retorna null se o documento não existir
+      }
+
+      // Se o documento existe, retornamos os dados como Medicamento
+      return doc.data() as Medicamento;
+    } catch (error) {
+      console.error('Erro ao buscar medicamento:', error);
+      return null;  // Retorna null em caso de erro na busca
+    }
+  }
 }
-
-
-
-
 
 
