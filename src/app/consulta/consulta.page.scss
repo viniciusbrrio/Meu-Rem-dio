@@ -1,5 +1,15 @@
 ion-header {
-  --background: rgba(32, 160, 177, 0.9); // Background levemente translúcido
+  --background: #20A0B1;
+
+  ion-title {
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  ion-back-button {
+    color: white;
+  }
 }
 
 ion-title {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ModalController, AlertController, NavController } from '@ionic/angular';
 import { AddMedicamentoModalPage } from '../add-medicamento-modal/add-medicamento-modal.page';
 import { LocalNotifications } from '@capacitor/local-notifications';
@@ -6,9 +6,11 @@ import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { MedicamentoService } from '../services/medicamento.service';
 import { User } from '../models/user.model';
-import { AngularFirestore } from '@angular/fire/compat/firestore'; // Firebase Firestore
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { Medicamento } from '../interfaces/medicamento.interface';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-medicamentos',
@@ -19,6 +21,8 @@ export class MedicamentosPage implements OnInit {
   medicamentos: Medicamento[] = [];
   user: User | undefined;
   user$: Observable<User | undefined> | undefined;
+
+  @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
 
   constructor(
     private modalController: ModalController,
@@ -167,6 +171,32 @@ export class MedicamentosPage implements OnInit {
       }
     } else {
       console.error('Horário inválido ou no passado para o lembrete:', medicamento.horario);
+    }
+  }
+
+  async gerarPDF() {
+    if (!this.pdfContent) {
+      console.error('Elemento PDF não encontrado!');
+      return;
+    }
+    
+    const element = this.pdfContent.nativeElement;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    try {
+      const canvas = await html2canvas(element, { scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+      
+      // Adiciona o título com o nome do usuário
+      if (this.user?.nome) {
+        pdf.text(`Registro de Medicamentos de ${this.user.nome}`, 10, 10);
+      }
+      
+      // Adiciona a imagem da tabela renderizada
+      pdf.addImage(imgData, 'PNG', 10, 20, 190, 0);
+      pdf.save('medicamentos.pdf');
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
     }
   }
 }

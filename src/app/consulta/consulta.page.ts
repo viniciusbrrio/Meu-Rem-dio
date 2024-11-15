@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AlertController, ModalController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
@@ -7,6 +7,8 @@ import { ConsultaService } from '../services/consulta.service';
 import { User } from '../models/user.model';
 import { Consulta } from '../interfaces/consulta.interface';
 import { LocalNotifications } from '@capacitor/local-notifications';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-consulta',
@@ -26,6 +28,8 @@ export class ConsultaPage implements OnInit {
   consultasList: Consulta[] = []; // Lista de consultas
   user: User | undefined; // Usuário logado
   isModalOpen = false;
+
+  @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
 
   constructor(
     private firestore: AngularFirestore,
@@ -82,6 +86,22 @@ export class ConsultaPage implements OnInit {
         console.error('Erro ao salvar a consulta:', error);
       }
     }
+  }
+
+  async gerarPDF() {
+    const element = this.pdfContent.nativeElement;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const canvas = await html2canvas(element, { scale: 2 });
+    const imgData = canvas.toDataURL('image/png');
+    
+    // Adiciona o título com o nome do usuário
+    if (this.user?.nome) {
+      pdf.text(`Consultas de ${this.user.nome}`, 10, 10);
+    }
+    
+    // Adiciona a imagem da tabela renderizada
+    pdf.addImage(imgData, 'PNG', 10, 20, 190, 0);
+    pdf.save('consultas.pdf');
   }
   
 
@@ -144,6 +164,7 @@ export class ConsultaPage implements OnInit {
       ]
     });
   }
+
 }
 
 

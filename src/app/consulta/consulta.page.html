@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     
-    <ion-title>Consultas</ion-title>
+    <ion-title>Consultas - {{ user?.nome }}</ion-title>
     <ion-buttons slot="end">
       <ion-back-button defaultHref="/painel/:id"></ion-back-button>
     </ion-buttons>
@@ -9,41 +9,52 @@
 </ion-header>
 
 <ion-content id="main-content">
+  
+  
+  
   <ion-tabs>
 
       <!-- Componente Tabs -->
       <ion-tab-bar slot="bottom" style="--background: #20A0B1;">
+
         <ion-tab-button tab="home">
           <ion-icon name="home-outline" routerLink="/home"></ion-icon>
           <ion-label>Home</ion-label>
         </ion-tab-button>
+
         <ion-tab-button tab="farmacias">
           <ion-icon name="medkit-outline" routerLink="/farmacias-proximas/:id"></ion-icon>
           <ion-label>Farmácias</ion-label>
         </ion-tab-button>
-        <ion-tab-button tab="bulas">
-          <ion-icon name="document-text-outline"></ion-icon>
-          <ion-label>Bulas</ion-label>
+
+        <ion-tab-button tab="perfil">
+          <ion-icon name="person" routerLink="/perfil/:id"></ion-icon>
+          <ion-label>Perfil</ion-label>
         </ion-tab-button>
+
+        <ion-tab-button tab="pdf" (click)="gerarPDF()">
+          <ion-icon name="document"></ion-icon>
+          <ion-label>Pdf</ion-label>
+        </ion-tab-button>
+
       </ion-tab-bar>
 
     <ion-tab tab="consulta">
       <ion-content>
-      
-          <ion-list>
-            <ion-item *ngFor="let item of consultasList">
-              <ion-label>
-                <h2>{{ item.titulo }}</h2>
-                <p><strong>Médico:</strong> {{ item.medico }}</p>
-                <p><strong>Data e Hora:</strong> {{ item.dataHora| date:'dd/MM/yyyy - HH:mm'}}</p>
-                <p><strong>Localização:</strong> {{ item.localizacao }}</p>
-                <p><strong>Observações:</strong> {{ item.observacoes }}</p>
-              </ion-label>
-              <ion-button (click)="cancelarTarefa(consulta)">Finalizar</ion-button>
-            </ion-item>
-          </ion-list>
-      
-      
+        <div #pdfContent>
+            <ion-list>
+              <ion-item *ngFor="let item of consultasList">
+                <ion-label>
+                  <h2>{{ item.titulo }}</h2>
+                  <p><strong>Médico:</strong> {{ item.medico }}</p>
+                  <p><strong>Data e Hora:</strong> {{ item.dataHora| date:'dd/MM/yyyy - HH:mm'}}</p>
+                  <p><strong>Localização:</strong> {{ item.localizacao }}</p>
+                  <p><strong>Observações:</strong> {{ item.observacoes }}</p>
+                </ion-label>
+                <ion-button (click)="cancelarTarefa(consulta)">Finalizar</ion-button>
+              </ion-item>
+            </ion-list>
+      </div>  
       
       
         <ion-fab vertical="bottom" horizontal="end" slot="fixed">

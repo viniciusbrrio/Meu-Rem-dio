@@ -3,8 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-// Interface para o perfil de utilizador
-interface UserProfile {
+export interface UserProfile {
   nome: string;
   sobrenome: string;
   dataNascimento: string;
@@ -23,15 +22,19 @@ export class PerfilService {
   constructor(private firestore: AngularFirestore) {}
 
   // Método para obter o perfil do utilizador com base no ID
-  getUserProfile(userId: string): Observable<UserProfile> {
+  getUserProfile(userId: string): Observable<UserProfile | undefined> {
     return this.firestore
       .collection<UserProfile>(this.collectionName)
       .doc(userId)
       .snapshotChanges()
       .pipe(
         map(action => {
-          const data = action.payload.data() as UserProfile;
-          return { ...data, userId: action.payload.id };
+          const data = action.payload.data() as UserProfile | undefined;
+          if (data) {
+            return { ...data, userId: action.payload.id };
+          } else {
+            return undefined;
+          }
         }),
         catchError(error => {
           console.error('Erro ao carregar o perfil:', error);
@@ -55,4 +58,3 @@ export class PerfilService {
       });
   }
 }
-

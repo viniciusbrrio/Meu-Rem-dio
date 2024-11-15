@@ -1,13 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar style="--background: #20A0B1;">
-    
     <ion-title>Perfil</ion-title>
-
-      <!-- Botão de Voltar -->
-      <ion-buttons slot="end">
-        <ion-back-button defaultHref="/painel:id"></ion-back-button>
-      </ion-buttons>
-
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/painel"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -26,32 +22,33 @@
   <form *ngIf="!carregando && !erro">
     <ion-item>
       <ion-label position="floating">Nome</ion-label>
-      <ion-input [(ngModel)]="userProfile.nome" name="nome" readonly></ion-input>
+      <ion-input [(ngModel)]="userProfile.nome" readonly></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Sobrenome</ion-label>
-      <ion-input [(ngModel)]="userProfile.sobrenome" name="sobrenome" readonly></ion-input>
+      <ion-input [(ngModel)]="userProfile.sobrenome" readonly></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Email</ion-label>
-      <ion-input type="email" [(ngModel)]="userProfile.email" name="email" readonly></ion-input>
+      <ion-input type="email" [(ngModel)]="userProfile.email" readonly></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Data de Nascimento</ion-label>
-      <ion-input type="date" [(ngModel)]="userProfile.dataNascimento" name="dataNascimento" readonly></ion-input>
+      <ion-input type="date" [(ngModel)]="userProfile.dataNascimento" readonly></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Bairro</ion-label>
-      <ion-input [(ngModel)]="userProfile.bairro" name="bairro" readonly></ion-input>
+      <ion-input [(ngModel)]="userProfile.bairro" readonly></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Estado</ion-label>
-      <ion-input [(ngModel)]="userProfile.estado" name="estado" readonly></ion-input>
+      <ion-input [(ngModel)]="userProfile.estado" readonly></ion-input>
     </ion-item>
   </form>
 </ion-content>
+

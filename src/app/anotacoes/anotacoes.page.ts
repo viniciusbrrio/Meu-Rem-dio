@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { AnotacoesService, Anotacao } from '../services/anotacoes.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { User } from '../models/user.model';
 import firebase from 'firebase/compat/app'; // Importação do Firebase
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-anotacoes',
@@ -15,6 +17,8 @@ export class AnotacoesPage implements OnInit {
   anotacoes: Anotacao[] = [];
   anotacoesFiltradas: Anotacao[] = [];
   user: User | undefined;
+  
+  @ViewChild('pdfContent', { static: false }) pdfContent?: ElementRef;
 
   constructor(
     private alertController: AlertController,
@@ -61,6 +65,7 @@ export class AnotacoesPage implements OnInit {
             if (data.conteudo && this.user) {
               const novaNota: Anotacao = { conteudo: data.conteudo, dataHora: new Date(), userId: this.user.id };
               await this.anotacoesService.adicionarAnotacao(novaNota);
+              this.loadAnotacoes(this.user.id); // Atualizar a lista após adicionar
             }
           },
         },
@@ -81,6 +86,7 @@ export class AnotacoesPage implements OnInit {
             if (data.conteudo) {
               nota.conteudo = data.conteudo;
               await this.anotacoesService.editarAnotacao(nota);
+              this.loadAnotacoes(this.user?.id || ''); // Atualizar lista
             }
           },
         },
@@ -89,10 +95,26 @@ export class AnotacoesPage implements OnInit {
     await alert.present();
   }
 
-  excluirNota(nota: Anotacao) {
-    if (nota.id) {
-      this.anotacoesService.excluirAnotacao(nota.id);
-    }
+  async excluirNota(nota: Anotacao) {
+    if (!nota.id) return;
+    
+    const alert = await this.alertController.create({
+      header: 'Confirmação',
+      message: 'Deseja excluir esta anotação?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel', cssClass: 'secondary' },
+        {
+          text: 'Excluir',
+          handler: async () => {
+            await this.anotacoesService.excluirAnotacao(nota.id!);
+            if (this.user) {
+              this.loadAnotacoes(this.user.id); // Atualizar lista após exclusão
+            }
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   filtrarAnotacoes(event: any) {
@@ -102,6 +124,32 @@ export class AnotacoesPage implements OnInit {
       const dataHoraMatch = this.formatarDataHora(nota.dataHora).toLowerCase().includes(pesquisa);
       return conteudoMatch || dataHoraMatch;
     });
+  }
+
+  async gerarPDF() {
+    if (!this.pdfContent) {
+      console.error('Elemento PDF não encontrado!');
+      return;
+    }
+    
+    const element = this.pdfContent.nativeElement;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    try {
+      const canvas = await html2canvas(element, { scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+      
+      // Adiciona o título com o nome do usuário
+      if (this.user?.nome) {
+        pdf.text(`Registro de Anotações de ${this.user.nome}`, 10, 10);
+      }
+      
+      // Adiciona a imagem da tabela renderizada
+      pdf.addImage(imgData, 'PNG', 10, 20, 190, 0);
+      pdf.save('anotacoes.pdf');
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+    }
   }
 }
 

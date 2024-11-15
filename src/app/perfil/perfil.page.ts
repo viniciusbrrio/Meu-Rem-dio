@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { CadastroService } from '../services/cadastro.service';
+import { PerfilService, UserProfile } from '../services/perfil.service';
 
 @Component({
   selector: 'app-perfil',
@@ -8,20 +8,21 @@ import { CadastroService } from '../services/cadastro.service';
   styleUrls: ['./perfil.page.scss'],
 })
 export class PerfilPage implements OnInit {
-  userProfile: any = {
+  userProfile: UserProfile = {
     nome: '',
     sobrenome: '',
-    email: '',
     dataNascimento: '',
+    estado: '',
     bairro: '',
-    estado: ''
+    email: '',
+    userId: ''
   };
   carregando: boolean = true;
   erro: string | null = null;
 
   constructor(
     private afAuth: AngularFireAuth,
-    private cadastroService: CadastroService
+    private perfilService: PerfilService
   ) {}
 
   ngOnInit() {
@@ -33,15 +34,16 @@ export class PerfilPage implements OnInit {
     this.erro = null;
 
     try {
-      const user = await this.afAuth.currentUser; // Obtém o usuário autenticado
-      const userId = user?.uid; // Pega o ID do usuário
+      const user = await this.afAuth.currentUser;
+      const userId = user?.uid;
 
       if (userId) {
-        // Busca o perfil do usuário usando o userId
-        this.cadastroService.getCadastros(userId).subscribe({
+        this.perfilService.getUserProfile(userId).subscribe({
           next: (dados) => {
             if (dados) {
-              this.userProfile = dados; // Atualiza o perfil com os dados do Firestore
+              this.userProfile = dados;
+            } else {
+              this.erro = 'Perfil não encontrado.';
             }
             this.carregando = false;
           },
@@ -62,6 +64,4 @@ export class PerfilPage implements OnInit {
     }
   }
 }
-
-
 

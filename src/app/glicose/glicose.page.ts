@@ -1,6 +1,4 @@
-//glicose.page.ts
-
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { GlicoseService } from '../services/glicose.service';
 import { ActivatedRoute } from '@angular/router';
@@ -10,6 +8,8 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { Glicose } from '../interfaces/glicose.interface';
 import firebase from 'firebase/compat/app';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-glicose',
@@ -21,6 +21,8 @@ export class GlicosePage implements OnInit {
   glicoseFiltradas: Glicose[] = [];
   user: User | undefined;
   userId: string | null = null;
+
+  @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
 
   constructor(
     private alertController: AlertController,
@@ -193,6 +195,22 @@ export class GlicosePage implements OnInit {
     } else {
       return dataHora.toLocaleString();
     }
+  }
+
+  async gerarPDF() {
+    const element = this.pdfContent.nativeElement;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const canvas = await html2canvas(element, { scale: 2 });
+    const imgData = canvas.toDataURL('image/png');
+    
+    // Adiciona o título com o nome do usuário
+    if (this.user?.nome) {
+      pdf.text(`Registro de Glicose de ${this.user.nome}`, 10, 10);
+    }
+    
+    // Adiciona a imagem da tabela renderizada
+    pdf.addImage(imgData, 'PNG', 10, 20, 190, 0);
+    pdf.save('glicose.pdf');
   }
 }
 

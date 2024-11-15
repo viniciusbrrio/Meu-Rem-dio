@@ -99,13 +99,12 @@ export class HomePage implements OnInit {
 
   // Método de logout
   async logout() {
+    try{
     await this.afAuth.signOut();
     await this.storage.clear();
     this.router.navigate(['/login']);
+    }catch (error){
+      console.error('Erro ao fazer logout.',error);
   }
 }
-
-
-
-
-
+}

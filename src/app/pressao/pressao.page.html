@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar style="--background: #20A0B1;">
-    <ion-title>Pressão Arterial</ion-title>
+    <ion-title>Pressão - {{ user?.nome }}</ion-title>
     <ion-buttons slot="end">
       <ion-back-button defaultHref="/painel/:id"></ion-back-button>
     </ion-buttons>
@@ -24,13 +24,20 @@
         <ion-icon name="home-outline" routerLink="/home"></ion-icon>
         <ion-label>Home</ion-label>
       </ion-tab-button>
+
       <ion-tab-button tab="farmacias">
         <ion-icon name="medkit-outline" routerLink="/farmacias-proximas/:id"></ion-icon>
         <ion-label>Farmácias</ion-label>
       </ion-tab-button>
-      <ion-tab-button tab="bulas">
-        <ion-icon name="document-text-outline"></ion-icon>
-        <ion-label>Bulas</ion-label>
+
+      <ion-tab-button tab="perfil">
+        <ion-icon name="person" routerLink="/perfil/:id"></ion-icon>
+        <ion-label>Perfil</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="pdf" (click)="gerarPDF()">
+        <ion-icon name="document"></ion-icon>
+        <ion-label>Pdf</ion-label>
       </ion-tab-button>
       </ion-tab-bar>
     
@@ -40,19 +47,21 @@
         <ion-searchbar (ionInput)="filtrarAnotacoes($event)" placeholder="Pesquisar"></ion-searchbar>
     
         <!-- Lista de medições de pressão -->
-        <ion-list>
-          <ion-item *ngFor="let nota of pressaoFiltradas">
-            <ion-label>
-              <h2>{{ formatarDataHora(nota.dataHora) | date:'dd/MM/yyyy - HH:mm'}}</h2>
-              <p>Sístole (max): {{ nota.sistole }}</p>
-              <p>Diástole (min): {{ nota.diastole }}</p>
-            </ion-label>
-            <ion-buttons slot="end">
-              <ion-button (click)="editarNota(nota)">Editar</ion-button>
-              <ion-button color="danger" (click)="excluiNota(nota)">Excluir</ion-button>
-            </ion-buttons>
-          </ion-item>
-        </ion-list>
+        <div #pdfContent>
+          <ion-list>
+            <ion-item *ngFor="let nota of pressaoFiltradas">
+              <ion-label>
+                <h2>{{ formatarDataHora(nota.dataHora) | date:'dd/MM/yyyy - HH:mm'}}</h2>
+                <p>Sístole (max): {{ nota.sistole }}</p>
+                <p>Diástole (min): {{ nota.diastole }}</p>
+              </ion-label>
+              <ion-buttons slot="end">
+                <ion-button (click)="editarNota(nota)">Editar</ion-button>
+                <ion-button color="danger" (click)="excluiNota(nota)">Excluir</ion-button>
+              </ion-buttons>
+            </ion-item>
+          </ion-list>
+        </div>
       </ion-content>
       </ion-tab>
     </ion-tabs>
