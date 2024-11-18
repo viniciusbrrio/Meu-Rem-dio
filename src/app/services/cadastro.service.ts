@@ -1,20 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Cadastro } from '../interfaces/cadastro.interface';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-// Interface para o cadastro de utilizadores
-interface Cadastro {
-  Id?: string;
-  nome: string;
-  sobrenome: string;
-  dataNascimento: string;
-  estado: string;
-  bairro: string;
-  email: string;
-  senha: string;
-  userId: string;
-}
 
 @Injectable({
   providedIn: 'root',

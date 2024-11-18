@@ -1,17 +1,8 @@
 import { Injectable } from '@angular/core';
+import {Cadastro} from '../interfaces/cadastro.interface';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-
-export interface UserProfile {
-  nome: string;
-  sobrenome: string;
-  dataNascimento: string;
-  estado: string;
-  bairro: string;
-  email: string;
-  userId: string;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -21,40 +12,36 @@ export class PerfilService {
 
   constructor(private firestore: AngularFirestore) {}
 
-  // Método para obter o perfil do utilizador com base no ID
-  getUserProfile(userId: string): Observable<UserProfile | undefined> {
+
+  getCadastroByUserId(userId: string): Observable<Cadastro | undefined> {
     return this.firestore
-      .collection<UserProfile>(this.collectionName)
-      .doc(userId)
+      .collection<Cadastro>(this.collectionName, ref => 
+        ref.where('userId', '==', userId).limit(1))
       .snapshotChanges()
       .pipe(
-        map(action => {
-          const data = action.payload.data() as UserProfile | undefined;
-          if (data) {
-            return { ...data, userId: action.payload.id };
-          } else {
-            return undefined;
-          }
+        map(actions => {
+          if (actions.length === 0) return undefined;
+          const action = actions[0];
+          const data = action.payload.doc.data() as Cadastro;
+          const id = action.payload.doc.id;
+          return { id, ...data };
         }),
         catchError(error => {
-          console.error('Erro ao carregar o perfil:', error);
-          return throwError(() => new Error('Erro ao carregar o perfil.'));
+          console.error('Erro ao buscar cadastro:', error);
+          throw error;
         })
       );
   }
 
-  // Método para atualizar o perfil do utilizador
-  updateUserProfile(userId: string, profileData: UserProfile): Promise<void> {
-    return this.firestore
-      .collection<UserProfile>(this.collectionName)
-      .doc(userId)
-      .set(profileData)
-      .then(() => {
-        console.log('Perfil atualizado com sucesso!');
-      })
-      .catch(error => {
-        console.error('Erro ao atualizar o perfil:', error);
-        throw new Error('Erro ao atualizar o perfil.');
-      });
+  // Atualiza os dados do cadastro
+  async updateCadastro(cadastroId: string, dadosAtualizados: Partial<Cadastro>): Promise<void> {
+    try {
+      const docRef = this.firestore.doc(`${this.collectionName}/${cadastroId}`);
+      await docRef.update(dadosAtualizados);
+    } catch (error) {
+      console.error('Erro ao atualizar cadastro:', error);
+      throw error;
+    }
   }
 }
+

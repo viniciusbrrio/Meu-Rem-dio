@@ -12,14 +12,14 @@ import { CadastroService } from '../services/cadastro.service'; // Serviço de C
 export class CadastroPage implements OnInit {
   registerForm!: FormGroup;
   passwordsDoNotMatch = false;
-  showCustomEstadoField: boolean = false; // Para mostrar o campo de estado manual
+  showCustomEstadoField: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private navCtrl: NavController,
     private alertController: AlertController,
-    private afAuth: AngularFireAuth, // Injeção do Firebase Auth
-    private cadastroService: CadastroService // Injeção do serviço de Cadastro
+    private afAuth: AngularFireAuth, 
+    private cadastroService: CadastroService
   ) {}
 
   ngOnInit() {
@@ -28,21 +28,21 @@ export class CadastroPage implements OnInit {
       sobrenome: ['', Validators.required],
       dataNascimento: ['', Validators.required],
       estado: ['', Validators.required],
-      customEstado: [''], // Campo para o estado manual
+      customEstado: [''], 
       bairro: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(6)]],
       confirmarSenha: ['', Validators.required]
     });
 
-    // Validação personalizada para verificar se as senhas coincidem
+   
     this.registerForm.valueChanges.subscribe(() => {
       const senha = this.registerForm.get('senha')?.value;
       const confirmarSenha = this.registerForm.get('confirmarSenha')?.value;
       this.passwordsDoNotMatch = senha !== confirmarSenha;
     });
 
-    // Monitorar mudanças no estado para exibir o campo "customEstado" quando "Outro" for selecionado
+    
     this.registerForm.get('estado')?.valueChanges.subscribe((value) => {
       if (value === 'Outro') {
         this.showCustomEstadoField = true;
@@ -68,7 +68,6 @@ export class CadastroPage implements OnInit {
         const userId = userCredential.user?.uid;
 
         if (userId) {
-          // Guardar dados adicionais no Firestore através do serviço
           await this.cadastroService.addCadastro({
             nome,
             sobrenome,
@@ -80,7 +79,7 @@ export class CadastroPage implements OnInit {
             userId
           });
 
-          // Enviar e-mail de verificação
+          
           await this.sendVerificationEmail();
 
           // Mostrar alerta de sucesso

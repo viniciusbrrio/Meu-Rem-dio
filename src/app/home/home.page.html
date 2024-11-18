@@ -25,7 +25,7 @@
     <ion-title>Meu Remédio</ion-title>
     
     <ion-buttons slot="end">
-      <ion-button routerLink="/perfil">
+      <ion-button routerLink="/perfil/:id">
         <ion-img src="/assets/imagem/logo1.png" style="width: 40px; height: 40px;"></ion-img>
       </ion-button>
     </ion-buttons>
@@ -55,7 +55,7 @@
       </ion-tab-button>
 
       <ion-tab-button tab="perfil">
-        <ion-icon name="person" routerLink="/perfil/:id"></ion-icon>
+        <ion-icon name="person"  routerLink="/perfil/:id"></ion-icon>
         <ion-label>Perfil</ion-label>
       </ion-tab-button>
     </ion-tab-bar>

@@ -8,47 +8,75 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf="carregando" class="carregando">
+  <div *ngIf="carregando" class="ion-text-center">
     <ion-spinner></ion-spinner>
     <p>Carregando perfil...</p>
   </div>
 
-  <div *ngIf="erro" class="erro-container">
-    <ion-text color="danger">
-      {{ erro }}
-    </ion-text>
+  <div *ngIf="erro" class="ion-text-center ion-padding">
+    <ion-text color="danger">{{ erro }}</ion-text>
   </div>
 
-  <form *ngIf="!carregando && !erro">
+  <form [formGroup]="perfilForm" *ngIf="!carregando && !erro">
     <ion-item>
       <ion-label position="floating">Nome</ion-label>
-      <ion-input [(ngModel)]="userProfile.nome" readonly></ion-input>
+      <ion-input formControlName="nome" [readonly]="!modoEdicao"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Sobrenome</ion-label>
-      <ion-input [(ngModel)]="userProfile.sobrenome" readonly></ion-input>
+      <ion-input formControlName="sobrenome" [readonly]="!modoEdicao"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Email</ion-label>
-      <ion-input type="email" [(ngModel)]="userProfile.email" readonly></ion-input>
+      <ion-input type="email" formControlName="email" [readonly]="!modoEdicao"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Data de Nascimento</ion-label>
-      <ion-input type="date" [(ngModel)]="userProfile.dataNascimento" readonly></ion-input>
+      <ion-input 
+        type="text" 
+        formControlName="formatarDataHora(dataNascimento) | date:'dd/MM/yyyy" 
+        [readonly]="!modoEdicao" 
+        [value]="formatarDataHora()"> 
+      </ion-input>
     </ion-item>
-
     <ion-item>
       <ion-label position="floating">Bairro</ion-label>
-      <ion-input [(ngModel)]="userProfile.bairro" readonly></ion-input>
+      <ion-input formControlName="bairro" [readonly]="!modoEdicao"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Estado</ion-label>
-      <ion-input [(ngModel)]="userProfile.estado" readonly></ion-input>
+      <ion-input formControlName="estado" [readonly]="!modoEdicao"></ion-input>
     </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Senha</ion-label>
+      <ion-input formControlName="senha" [readonly]="!modoEdicao"></ion-input>
+    </ion-item>
+
+
+    <div class="ion-padding">
+      <ng-container *ngIf="!modoEdicao; else botoesEdicao">
+        <ion-button expand="block" (click)="habilitarEdicao()">
+          <ion-icon name="create-outline" slot="start"></ion-icon>
+          Editar Perfil
+        </ion-button>
+      </ng-container>
+      
+      <ng-template #botoesEdicao>
+        <ion-button expand="block" color="success" (click)="salvarAlteracoes()" [disabled]="perfilForm.invalid">
+          <ion-icon name="save-outline" slot="start"></ion-icon>
+          Salvar Alterações
+        </ion-button>
+        <ion-button expand="block" color="medium" (click)="cancelarEdicao()" class="ion-margin-top">
+          <ion-icon name="close-outline" slot="start"></ion-icon>
+          Cancelar
+        </ion-button>
+      </ng-template>
+    </div>
   </form>
 </ion-content>
 

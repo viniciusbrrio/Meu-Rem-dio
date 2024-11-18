@@ -76,7 +76,7 @@ export class PressaoPage implements OnInit {
                 userId: this.userId // Associa o ID do usuário ao registro
               };
               await this.pressaoService.adicionarPressao(novoRegistro);
-              this.loadPressaoRecords(this.userId); // Atualiza a lista após adicionar
+              this.loadPressaoRecords(this.userId);
             } else {
               await this.presentAlert('Por favor, preencha todos os campos.');
             }

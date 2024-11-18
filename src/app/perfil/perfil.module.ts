@@ -1,20 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Importa ReactiveFormsModule
 import { IonicModule } from '@ionic/angular';
-
-import { PerfilPageRoutingModule } from './perfil-routing.module';
-import { PerfilPage } from './perfil.page';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PerfilComponent } from './perfil.page';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule, // Adiciona ReactiveFormsModule aqui
     IonicModule,
-    PerfilPageRoutingModule
+    ReactiveFormsModule,
+    RouterModule.forChild([
+      {
+        path: '',
+        component: PerfilComponent
+      }
+    ])
   ],
-  declarations: [PerfilPage]
+  declarations: [PerfilComponent]
 })
 export class PerfilPageModule {}
+
 

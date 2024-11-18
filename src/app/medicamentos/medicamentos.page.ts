@@ -85,12 +85,12 @@ export class MedicamentosPage implements OnInit {
     await modal.present();
   }
 
-  // Verificar se o medicamento já existe
+  
   medicamentoExiste(nome: string): boolean {
     return this.medicamentos.some(med => med.nome === nome && med.userId === this.user?.id);
   }
 
-  // Excluir medicamento com confirmação
+
   async cancelarTarefa(medicamento: Medicamento) {
     const alert = await this.alertController.create({
       header: 'Confirmar Exclusão',
@@ -106,7 +106,7 @@ export class MedicamentosPage implements OnInit {
           handler: async () => {
             try {
               if (medicamento.id) {
-                // Cancela a notificação associada ao medicamento
+                
                 if (medicamento.notificationId) {
                   await LocalNotifications.cancel({ notifications: [{ id: medicamento.notificationId }] });
                 }
@@ -135,7 +135,7 @@ export class MedicamentosPage implements OnInit {
     await alert.present();
   }
 
-  // Navegar para a página de alertas do medicamento
+  
   irParaAlertas(medicamento: Medicamento) {
     if (medicamento.id) {
       this.navCtrl.navigateForward(`/alertas/${medicamento.id}`);
