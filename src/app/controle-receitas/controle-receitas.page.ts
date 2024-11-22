@@ -107,10 +107,10 @@ export class ControleReceitasPage implements OnInit {
         const fileName = `receitas/${new Date().getTime()}.jpeg`;
         const imageRef = ref(storage, fileName);
 
-        // Faz o upload da imagem para o Firebase Storage
+        
         await uploadString(imageRef, image.dataUrl, 'data_url');
 
-        // Obtém a URL pública da imagem
+        
         this.imagemUrl = await getDownloadURL(imageRef);
 
         console.log('Imagem salva com sucesso:', this.imagemUrl);

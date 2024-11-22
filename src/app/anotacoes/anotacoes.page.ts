@@ -41,12 +41,12 @@ export class AnotacoesPage implements OnInit {
 
   loadAnotacoes(userId: string) {
     this.anotacoesService.getAnotacoes(userId).subscribe((anotacoes) => {
-      // Converte dataHora para Date
+     
       this.anotacoes = anotacoes.map(nota => ({
         ...nota,
         dataHora: nota.dataHora instanceof firebase.firestore.Timestamp
-          ? nota.dataHora.toDate() // Converte Timestamp para Date
-          : new Date(nota.dataHora), // Converte string ou outro formato para Date
+          ? nota.dataHora.toDate() 
+          : new Date(nota.dataHora), 
       }));
       this.anotacoesFiltradas = [...this.anotacoes];
     });
@@ -54,10 +54,9 @@ export class AnotacoesPage implements OnInit {
   
   formatarDataHora(dataHora: Date | firebase.firestore.Timestamp): string {
     const data = dataHora instanceof firebase.firestore.Timestamp
-      ? dataHora.toDate() // Converte para Date
-      : new Date(dataHora); // Garante que seja um objeto Date
+      ? dataHora.toDate() 
+      : new Date(dataHora);
   
-    // Formata no padrão dd/MM/yyyy - HH:mm
     return data.toLocaleString('pt-PT', {
       day: '2-digit',
       month: '2-digit',
@@ -80,7 +79,7 @@ export class AnotacoesPage implements OnInit {
             if (data.conteudo && this.user) {
               const novaNota: Anotacao = { conteudo: data.conteudo, dataHora: new Date(), userId: this.user.id };
               await this.anotacoesService.adicionarAnotacao(novaNota);
-              this.loadAnotacoes(this.user.id); // Atualizar a lista após adicionar
+              this.loadAnotacoes(this.user.id);
             }
           },
         },
@@ -101,7 +100,7 @@ export class AnotacoesPage implements OnInit {
             if (data.conteudo) {
               nota.conteudo = data.conteudo;
               await this.anotacoesService.editarAnotacao(nota);
-              this.loadAnotacoes(this.user?.id || ''); // Atualizar lista
+              this.loadAnotacoes(this.user?.id || ''); 
             }
           },
         },
@@ -123,7 +122,7 @@ export class AnotacoesPage implements OnInit {
           handler: async () => {
             await this.anotacoesService.excluirAnotacao(nota.id!);
             if (this.user) {
-              this.loadAnotacoes(this.user.id); // Atualizar lista após exclusão
+              this.loadAnotacoes(this.user.id); 
             }
           }
         }

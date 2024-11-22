@@ -48,7 +48,7 @@ export class PressaoPage implements OnInit {
       .collection<Pressao>('pressao', ref => ref.where('userId', '==', userId))
       .valueChanges({ idField: 'id' })
       .subscribe((pressao) => {
-        // Converte `dataHora` para o tipo `Date`, se necessário
+        
         this.pressao = pressao.map(nota => ({
           ...nota,
           dataHora: nota.dataHora instanceof firebase.firestore.Timestamp
@@ -80,7 +80,7 @@ export class PressaoPage implements OnInit {
                 sistole: data.sistole,
                 diastole: data.diastole,
                 dataHora,
-                userId: this.userId // Associa o ID do usuário ao registro
+                userId: this.userId
               };
               await this.pressaoService.adicionarPressao(novoRegistro);
               this.loadPressaoRecords(this.userId);
@@ -121,9 +121,9 @@ export class PressaoPage implements OnInit {
                 sistole: data.sistole,
                 diastole: data.diastole,
                 dataHora,
-                userId: this.userId! // Inclui o ID do usuário no registro
+                userId: this.userId!
               };
-              await this.pressaoService.editarPressao(registroAtualizado); // Chamada corrigida
+              await this.pressaoService.editarPressao(registroAtualizado);
               this.loadPressaoRecords(this.userId!);
             } else {
               await this.presentAlert('Por favor, preencha todos os campos.');
@@ -138,7 +138,7 @@ export class PressaoPage implements OnInit {
   excluirNota(nota: Pressao) {
     if (nota.id) {
       this.pressaoService.excluirPressao(nota.id);
-      this.loadPressaoRecords(this.userId!); // Garante que `userId` não seja nulo
+      this.loadPressaoRecords(this.userId!);
     }
   }
 
@@ -178,7 +178,6 @@ export class PressaoPage implements OnInit {
     }
   }
 
-  // Método para exibir alertas
   async presentAlert(message: string) {
     const alert = await this.alertController.create({
       header: 'Atenção',
@@ -194,12 +193,10 @@ export class PressaoPage implements OnInit {
     const canvas = await html2canvas(element, { scale: 2 });
     const imgData = canvas.toDataURL('image/png');
     
-    // Adiciona o título com o nome do usuário
     if (this.user?.nome) {
       pdf.text(`Mapa de Pressão de ${this.user.nome}`, 10, 10);
     }
     
-    // Adiciona a imagem da tabela renderizada
     pdf.addImage(imgData, 'PNG', 10, 20, 190, 0);
     pdf.save('pressao.pdf');
   }

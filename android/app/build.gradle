@@ -19,15 +19,14 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 repositories {
     flatDir {
-        dirs 'libs', '../Meu_Remedio/libs/barcodescanner-release-2.1.5.aar
-'
+        dirs 'libs', '../Meu_Remedio/libs' // Diretório onde está a biblioteca AAR
     }
 }
 
@@ -38,11 +37,13 @@ dependencies {
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
     implementation project(':capacitor-android')
     implementation project(':capacitor-cordova-android-plugins')
-    implementation(name: 'barcodescanner-release-2.1.5', ext: 'aar')
+    implementation(name: 'barcodescanner-release-2.1.5', ext: 'aar') // Ajuste correto
 
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    classpath 'com.android.tools.build:gradle:7.0.2'
+    classpath "org.jetbrains.kotlin-gradle-plugin:$kotlin_version"
 }
 
 apply from: 'capacitor.build.gradle'
@@ -55,4 +56,3 @@ try {
 } catch(Exception e) {
     logger.info("google-services.json não encontrado, plugin google-services não aplicado. Push Notifications não funcionarão.")
 }
-

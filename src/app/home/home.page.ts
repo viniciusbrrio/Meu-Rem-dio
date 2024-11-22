@@ -31,7 +31,7 @@ export class HomePage implements OnInit {
     this.loadUsers();
   }
 
-  // Método para abrir o modal de adicionar utilizador
+  
   async openAddUserModal() {
     const modal = await this.modalController.create({
       component: AddUserModalPage,
@@ -49,7 +49,6 @@ export class HomePage implements OnInit {
     await modal.present();
   }
 
-  // Carregar todos os utilizadores do Firebase
   loadUsers() {
     this.firestore
       .collection<User>('users')
@@ -59,7 +58,7 @@ export class HomePage implements OnInit {
       });
   }
 
-  // Ir para o painel do utilizador
+  
   goToUserPanel(user: User) {
     if (user && user.id) {
       this.router.navigate(['/painel', user.id]);
@@ -68,7 +67,7 @@ export class HomePage implements OnInit {
     }
   }
 
-  // Confirmar exclusão do utilizador
+  
   async confirmDeleteUser(user: User) {
     const alert = await this.alertController.create({
       header: 'Confirmar Exclusão',
@@ -91,13 +90,13 @@ export class HomePage implements OnInit {
     await alert.present();
   }
 
-  // Excluir utilizador do Firebase
+  
   async deleteUser(user: User) {
     await this.firestore.collection('users').doc(user.id).delete();
     this.loadUsers();
   }
 
-  // Método de logout
+ 
   async logout() {
     try{
     await this.afAuth.signOut();

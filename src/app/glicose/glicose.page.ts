@@ -49,7 +49,7 @@ export class GlicosePage implements OnInit {
       .collection<Glicose>('glicose', ref => ref.where('userId', '==', userId))
       .valueChanges({ idField: 'id' })
       .subscribe((glicose) => {
-        // Converte todos os registros para garantir que dataHora seja do tipo Date
+        
         this.glicose = glicose.map(nota => ({
           ...nota,
           dataHora: nota.dataHora instanceof firebase.firestore.Timestamp
@@ -202,7 +202,7 @@ export class GlicosePage implements OnInit {
 
   formatarDataHora(dataHora: Date | firebase.firestore.Timestamp): string {
     if (dataHora instanceof firebase.firestore.Timestamp) {
-      // Converte para Date se for um Timestamp do Firestore
+      
       return dataHora.toDate().toLocaleString('pt-PT', {
         day: '2-digit',
         month: '2-digit',
@@ -211,7 +211,7 @@ export class GlicosePage implements OnInit {
         minute: '2-digit',
       });
     } else if (dataHora instanceof Date) {
-      // Se já for um objeto Date, formate diretamente
+      
       return dataHora.toLocaleString('pt-PT', {
         day: '2-digit',
         month: '2-digit',
@@ -220,7 +220,7 @@ export class GlicosePage implements OnInit {
         minute: '2-digit',
       });
     } else {
-      // Se for uma string, converta para Date
+      
       return new Date(dataHora).toLocaleString('pt-PT', {
         day: '2-digit',
         month: '2-digit',

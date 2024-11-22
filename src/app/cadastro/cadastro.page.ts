@@ -82,7 +82,7 @@ export class CadastroPage implements OnInit {
           
           await this.sendVerificationEmail();
 
-          // Mostrar alerta de sucesso
+          
           const alert = await this.alertController.create({
             header: 'Sucesso!',
             message: 'Conta criada. Verifique o seu email para validar a conta.',
@@ -90,7 +90,7 @@ export class CadastroPage implements OnInit {
           });
           await alert.present();
 
-          // Navegar para a página de login
+          
           this.navCtrl.navigateRoot('/login');
         }
       } catch (error) {
@@ -120,7 +120,7 @@ export class CadastroPage implements OnInit {
   }
   
 
-  // Enviar e-mail de verificação do Firebase Auth
+  // opicional - Enviar e-mail de verificação do Firebase Auth
   async sendVerificationEmail() {
     const user = await this.afAuth.currentUser;
     if (user) {

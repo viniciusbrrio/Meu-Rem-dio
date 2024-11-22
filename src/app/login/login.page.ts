@@ -29,14 +29,14 @@ export class LoginPage implements OnInit {
       rememberMe: [false]
     });
 
-    // Redireciona para "home" se o usuário já estiver logado
+   
     this.afAuth.authState.subscribe(user => {
       if (user) {
         this.router.navigate(['/home']);
       }
     });
 
-    // Verifica o resultado do redirecionamento após login com Google
+   
     this.checkGoogleLogin();
 
     this.afAuth.getRedirectResult().then(result => {
@@ -75,7 +75,7 @@ export class LoginPage implements OnInit {
 
     try {
         const provider = new firebase.auth.GoogleAuthProvider();
-        await this.afAuth.signInWithPopup(provider); // Alterado para signInWithPopup
+        await this.afAuth.signInWithPopup(provider); 
         await this.router.navigate(['/home']);
     } catch (error) {
         console.error('Erro ao fazer login com Google:', error);
@@ -85,14 +85,14 @@ export class LoginPage implements OnInit {
     }
 }
 
-  // Verifica o resultado do redirecionamento após login com Google
+ 
   private async checkGoogleLogin() {
     try {
       const result = await this.afAuth.getRedirectResult();
       if (result.user) {
         console.log('Login com Google bem-sucedido!', result);
         await this.showToast('Login bem-sucedido com Google!', 'success');
-        this.router.navigate(['/home']);  // Redireciona para "home" após login
+        this.router.navigate(['/home']); 
       }
     } catch (error) {
       console.error('Erro ao verificar login com Google:', error);
@@ -100,7 +100,6 @@ export class LoginPage implements OnInit {
     }
   }
 
-  // Função para tratamento de erros de autenticação
   private async handleError(error: any) {
     let errorMessage = 'Ocorreu um erro ao fazer login. Por favor, tente novamente.';
     
@@ -119,7 +118,7 @@ export class LoginPage implements OnInit {
     await this.showErrorAlert(errorMessage);
   }
 
-  // Função para mostrar alertas de erro
+  
   private async showErrorAlert(message: string) {
     const alert = await this.alertController.create({
       header: 'Erro de Login',
@@ -129,7 +128,7 @@ export class LoginPage implements OnInit {
     await alert.present();
   }
 
-  // Função para mostrar uma notificação Toast
+  
   private async showToast(message: string, color: string = 'primary') {
     const toast = await this.toastCtrl.create({
       message,
@@ -139,9 +138,3 @@ export class LoginPage implements OnInit {
     await toast.present();
   }
 }
-
-
-
-
-
-

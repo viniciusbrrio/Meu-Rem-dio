@@ -1,5 +1,3 @@
-// farmacias-proximas.page.ts
-
 declare const google: any;
 
 import { Component, OnInit } from '@angular/core';
@@ -53,7 +51,7 @@ export class FarmaciasProximasPage implements OnInit {
           const userLatitude = position.coords.latitude;
           const userLongitude = position.coords.longitude;
           console.log('Localização obtida:', position);
-          await this.googleMapsService.loadGoogleMaps(); // Aguarde o carregamento do Google Maps
+          await this.googleMapsService.loadGoogleMaps();
           this.buscarFarmaciasProximas(userLatitude, userLongitude);
         } catch (error) {
           console.error('Erro ao obter localização:', error);
@@ -98,7 +96,7 @@ export class FarmaciasProximasPage implements OnInit {
           endereco: farmacia.vicinity
         }));
 
-        console.log('Farmácias encontradas:', this.farmacias); // Log aqui
+        console.log('Farmácias encontradas:', this.farmacias); 
       } else {
         console.error('Erro ao buscar farmácias:', status);
       }
