@@ -6,6 +6,8 @@ import { UserService } from '../services/user.service';
 import { User } from '../models/user.model';
 import { Receita } from '../interfaces/receita.interface';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { ref, uploadString, getDownloadURL } from 'firebase/storage';
+import { storage } from '../firebase-config';
 
 @Component({
   selector: 'app-controle-receitas',
@@ -91,7 +93,7 @@ export class ControleReceitasPage implements OnInit {
     });
     await alert.present();
   }
-  
+
   async escolherFoto() {
     try {
       const image = await Camera.getPhoto({
@@ -100,10 +102,22 @@ export class ControleReceitasPage implements OnInit {
         resultType: CameraResultType.DataUrl,
         source: CameraSource.Prompt,
       });
-      this.imagemUrl = image.dataUrl || null;
+
+      if (image.dataUrl) {
+        const fileName = `receitas/${new Date().getTime()}.jpeg`;
+        const imageRef = ref(storage, fileName);
+
+        // Faz o upload da imagem para o Firebase Storage
+        await uploadString(imageRef, image.dataUrl, 'data_url');
+
+        // Obtém a URL pública da imagem
+        this.imagemUrl = await getDownloadURL(imageRef);
+
+        console.log('Imagem salva com sucesso:', this.imagemUrl);
+      }
     } catch (error) {
-      console.error('Erro ao capturar a foto', error);
-      this.presentAlert('Não foi possível capturar a foto.');
+      console.error('Erro ao capturar ou salvar a foto', error);
+      this.presentAlert('Não foi possível capturar ou salvar a foto.');
     }
   }
 
@@ -131,7 +145,10 @@ export class ControleReceitasPage implements OnInit {
                 ...receita,
                 dataValidade: new Date(data.dataValidade),
               };
-              await this.receitaService.editarReceita(receita.id!, receitaAtualizada);
+              await this.receitaService.editarReceita(
+                receita.id!,
+                receitaAtualizada
+              );
               this.loadReceitas(this.userId!);
             } else {
               this.presentAlert('Por favor, preencha todos os campos.');
@@ -176,5 +193,3 @@ export class ControleReceitasPage implements OnInit {
     return new Date(data).toLocaleDateString();
   }
 }
-
-

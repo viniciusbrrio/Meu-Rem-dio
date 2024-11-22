@@ -7,6 +7,8 @@ import { ConsultaService } from '../services/consulta.service';
 import { User } from '../models/user.model';
 import { Consulta } from '../interfaces/consulta.interface';
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Plugins } from '@capacitor/core';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -22,11 +24,11 @@ export class ConsultaPage implements OnInit {
     dataHora: '',
     localizacao: '',
     observacoes: '',
-    userId: '' // ID do usuário associado à consulta
+    userId: '' 
   };
 
-  consultasList: Consulta[] = []; // Lista de consultas
-  user: User | undefined; // Usuário logado
+  consultasList: Consulta[] = [];
+  user: User | undefined;
   isModalOpen = false;
 
   @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
@@ -89,21 +91,55 @@ export class ConsultaPage implements OnInit {
   }
 
   async gerarPDF() {
-    const element = this.pdfContent.nativeElement;
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const canvas = await html2canvas(element, { scale: 2 });
-    const imgData = canvas.toDataURL('image/png');
-    
-    // Adiciona o título com o nome do usuário
-    if (this.user?.nome) {
-      pdf.text(`Consultas de ${this.user.nome}`, 10, 10);
+    try {
+      const element = this.pdfContent.nativeElement;
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+  
+      const canvas = await html2canvas(element, {scale: 1.5});
+  
+      const imgData = canvas.toDataURL('image/jpeg', 0.8);
+  
+      const imgWidth = 190;
+      const imgHeight = canvas.height * (imgWidth / canvas.width);
+  
+      if (this.user?.nome) {
+        pdf.setFontSize(12);
+        pdf.text(`Registro de Consultas de ${this.user.nome}`, 10, 10);
+      }
+  
+      pdf.addImage(imgData, 'JPEG', 10, 20, imgWidth, imgHeight);
+      pdf.save('consultas.pdf');
+  
+      const pdfBlob = pdf.output('blob');
+      const pdfBase64 = await this.blobToBase64(pdfBlob);
+  
+      await Filesystem.writeFile({
+        path: 'consultas.pdf',
+        data: pdfBase64,
+        directory: Directory.Documents
+      });
+  
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
     }
-    
-    // Adiciona a imagem da tabela renderizada
-    pdf.addImage(imgData, 'PNG', 10, 20, 190, 0);
-    pdf.save('consultas.pdf');
   }
   
+  private blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64data = reader.result as string;
+        resolve(base64data);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
 
   limparFormulario() {
     this.consulta = {
@@ -130,7 +166,7 @@ export class ConsultaPage implements OnInit {
           text: 'Excluir',
           handler: async () => {
             if (consulta.id) {
-              await this.consultaService.removeConsulta(consulta.id); // Passa o ID correto para exclusão
+              await this.consultaService.removeConsulta(consulta.id); 
             }
           },
         },
@@ -140,31 +176,46 @@ export class ConsultaPage implements OnInit {
     await alert.present();
   }
 
-  // Método para agendar notificação três horas antes da consulta
-  async agendarNotificacao(consulta: Consulta) {
+
+async agendarNotificacao(consulta: Consulta) {
+  try {
+    // Data e hora da consulta
     const dataHoraConsulta = new Date(consulta.dataHora);
     const tresHorasAntes = new Date(dataHoraConsulta.getTime() - 3 * 60 * 60 * 1000);
 
-    await LocalNotifications.requestPermissions(); // Solicita permissão para enviar notificações
+    // Solicitar permissões (apenas na primeira vez)
+    const permission = await LocalNotifications.requestPermissions();
+    if (permission.display === 'denied') {
+      console.error('Permissões para notificações negadas.');
+      return;
+    }
 
+    // Agendar a notificação
     await LocalNotifications.schedule({
       notifications: [
         {
-          id: new Date().getTime(),
-          title: `Lembrete de Consulta: ${consulta.titulo}`,
-          body: `Consulta com ${consulta.medico} às ${dataHoraConsulta.toLocaleString()}`,
+          id: dataHoraConsulta.getTime(),
+          title: `Lembrete: ${consulta.titulo}`,
+          body: `Você tem uma consulta com ${consulta.medico} às ${dataHoraConsulta.toLocaleTimeString()} no local: ${consulta.localizacao}.`,
           schedule: { at: tresHorasAntes },
           extra: {
             medico: consulta.medico,
             dataHora: consulta.dataHora,
             localizacao: consulta.localizacao,
             observacoes: consulta.observacoes,
-          }
-        }
-      ]
+          },
+          sound: 'beep.wav',
+          smallIcon: 'ic_stat_icon', 
+          largeIcon: 'ic_launcher', 
+        },
+      ],
     });
-  }
 
+    console.log('Notificação agendada com sucesso!');
+  } catch (error) {
+    console.error('Erro ao agendar notificação:', error);
+  }
+}
 }
 
 

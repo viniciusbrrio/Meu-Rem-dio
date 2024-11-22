@@ -39,19 +39,34 @@ export class AnotacoesPage implements OnInit {
     }
   }
 
-  // Carregar anotações do Firestore associadas ao usuário
   loadAnotacoes(userId: string) {
     this.anotacoesService.getAnotacoes(userId).subscribe((anotacoes) => {
-      this.anotacoes = anotacoes;
+      // Converte dataHora para Date
+      this.anotacoes = anotacoes.map(nota => ({
+        ...nota,
+        dataHora: nota.dataHora instanceof firebase.firestore.Timestamp
+          ? nota.dataHora.toDate() // Converte Timestamp para Date
+          : new Date(nota.dataHora), // Converte string ou outro formato para Date
+      }));
       this.anotacoesFiltradas = [...this.anotacoes];
     });
   }
-
+  
   formatarDataHora(dataHora: Date | firebase.firestore.Timestamp): string {
-    return dataHora instanceof firebase.firestore.Timestamp
-      ? dataHora.toDate().toLocaleString()
-      : dataHora.toLocaleString();
+    const data = dataHora instanceof firebase.firestore.Timestamp
+      ? dataHora.toDate() // Converte para Date
+      : new Date(dataHora); // Garante que seja um objeto Date
+  
+    // Formata no padrão dd/MM/yyyy - HH:mm
+    return data.toLocaleString('pt-PT', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
+  
 
   async adicionarNota() {
     const alert = await this.alertController.create({

@@ -48,10 +48,17 @@ export class PressaoPage implements OnInit {
       .collection<Pressao>('pressao', ref => ref.where('userId', '==', userId))
       .valueChanges({ idField: 'id' })
       .subscribe((pressao) => {
-        this.pressao = pressao;
+        // Converte `dataHora` para o tipo `Date`, se necessário
+        this.pressao = pressao.map(nota => ({
+          ...nota,
+          dataHora: nota.dataHora instanceof firebase.firestore.Timestamp
+            ? nota.dataHora.toDate()
+            : new Date(nota.dataHora),
+        }));
         this.pressaoFiltradas = [...this.pressao];
       });
   }
+  
 
   async adicionarNota() {
     const alert = await this.alertController.create({
@@ -189,7 +196,7 @@ export class PressaoPage implements OnInit {
     
     // Adiciona o título com o nome do usuário
     if (this.user?.nome) {
-      pdf.text(`Registro de Pressão de ${this.user.nome}`, 10, 10);
+      pdf.text(`Mapa de Pressão de ${this.user.nome}`, 10, 10);
     }
     
     // Adiciona a imagem da tabela renderizada

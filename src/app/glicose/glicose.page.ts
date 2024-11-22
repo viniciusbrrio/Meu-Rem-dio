@@ -49,10 +49,17 @@ export class GlicosePage implements OnInit {
       .collection<Glicose>('glicose', ref => ref.where('userId', '==', userId))
       .valueChanges({ idField: 'id' })
       .subscribe((glicose) => {
-        this.glicose = glicose;
+        // Converte todos os registros para garantir que dataHora seja do tipo Date
+        this.glicose = glicose.map(nota => ({
+          ...nota,
+          dataHora: nota.dataHora instanceof firebase.firestore.Timestamp
+            ? nota.dataHora.toDate()
+            : new Date(nota.dataHora),
+        }));
         this.glicoseFiltradas = [...this.glicose];
       });
   }
+  
 
   async adicionarNota() {
     const alert = await this.alertController.create({
@@ -82,14 +89,14 @@ export class GlicosePage implements OnInit {
           text: 'Salvar',
           handler: async (data) => {
             if (data.conteudo && data.data && data.hora && this.userId) {
-              const dataHora = new Date(`${data.data}T${data.hora}`);
+              const dataHora = new Date(`${data.data}T${data.hora}:00`);
               const novoRegistro: Glicose = {
-                conteudo: data.conteudo + ' mmHg',
-                dataHora,
-                userId: this.userId // Adiciona o ID do usuário
+                conteudo: `${data.conteudo} mmHg`,
+                dataHora, 
+                userId: this.userId
               };
               await this.glicoseService.adicionarGlicose(novoRegistro);
-              this.loadGlicoseRecords(this.userId); // Atualiza a lista após adicionar
+              this.loadGlicoseRecords(this.userId);
             } else {
               this.presentAlert('Por favor, preencha todos os campos.');
             }
@@ -97,10 +104,10 @@ export class GlicosePage implements OnInit {
         },
       ],
     });
-
+  
     await alert.present();
   }
-
+  
   async editarNota(nota: Glicose) {
     const alert = await this.alertController.create({
       header: 'Editar Registro de Glicose',
@@ -114,12 +121,16 @@ export class GlicosePage implements OnInit {
         {
           name: 'data',
           type: 'date',
-          value: nota.dataHora,
+          value: nota.dataHora instanceof firebase.firestore.Timestamp
+            ? nota.dataHora.toDate().toISOString().split('T')[0] 
+            : (new Date(nota.dataHora)).toISOString().split('T')[0],
         },
         {
           name: 'hora',
           type: 'time',
-          value: nota.dataHora,
+          value: nota.dataHora instanceof firebase.firestore.Timestamp
+            ? nota.dataHora.toDate().toISOString().split('T')[1].substring(0, 5)
+            : (new Date(nota.dataHora)).toISOString().split('T')[1].substring(0, 5),
         }
       ],
       buttons: [
@@ -132,11 +143,11 @@ export class GlicosePage implements OnInit {
           text: 'Salvar',
           handler: async (data) => {
             if (data.conteudo && data.data && data.hora) {
-              const dataHora = new Date(`${data.data}T${data.hora}`);
+              const dataHora = new Date(`${data.data}T${data.hora}:00`);
               const atualizadoRegistro: Glicose = {
                 conteudo: data.conteudo,
                 dataHora,
-                userId: this.userId! // Inclui userId
+                userId: this.userId!
               };
               await this.glicoseService.editarGlicose(nota.id!, atualizadoRegistro);
               this.loadGlicoseRecords(this.userId!);
@@ -147,10 +158,10 @@ export class GlicosePage implements OnInit {
         },
       ],
     });
-
+  
     await alert.present();
   }
-
+  
 
   async excluirNota(nota: Glicose) {
     if (!nota.id) return;
@@ -191,11 +202,35 @@ export class GlicosePage implements OnInit {
 
   formatarDataHora(dataHora: Date | firebase.firestore.Timestamp): string {
     if (dataHora instanceof firebase.firestore.Timestamp) {
-      return dataHora.toDate().toLocaleString();
+      // Converte para Date se for um Timestamp do Firestore
+      return dataHora.toDate().toLocaleString('pt-PT', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } else if (dataHora instanceof Date) {
+      // Se já for um objeto Date, formate diretamente
+      return dataHora.toLocaleString('pt-PT', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
     } else {
-      return dataHora.toLocaleString();
+      // Se for uma string, converta para Date
+      return new Date(dataHora).toLocaleString('pt-PT', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
     }
   }
+  
 
   async gerarPDF() {
     const element = this.pdfContent.nativeElement;
@@ -203,12 +238,10 @@ export class GlicosePage implements OnInit {
     const canvas = await html2canvas(element, { scale: 2 });
     const imgData = canvas.toDataURL('image/png');
     
-    // Adiciona o título com o nome do usuário
     if (this.user?.nome) {
-      pdf.text(`Registro de Glicose de ${this.user.nome}`, 10, 10);
+      pdf.text(`Mapa de Glicose de ${this.user.nome}`, 10, 10);
     }
     
-    // Adiciona a imagem da tabela renderizada
     pdf.addImage(imgData, 'PNG', 10, 20, 190, 0);
     pdf.save('glicose.pdf');
   }

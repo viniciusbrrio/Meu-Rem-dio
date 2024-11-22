@@ -22,23 +22,28 @@ export class GlicoseService {
     );
   }
 
-  // Obter todos os registros de glicose
   getGlicose(): Observable<Glicose[]> {
     return this.glicose;
   }
 
-  // Método para adicionar registro
+
   adicionarGlicose(glicose: Glicose): Promise<void> {
-    const id = this.firestore.createId(); // Gera um ID único
-    return this.firestore.collection('glicose').doc(id).set(glicose);
+    const registro = {
+      ...glicose,
+      dataHora: glicose.dataHora instanceof Date ? glicose.dataHora : new Date(glicose.dataHora),
+    };
+    const id = this.firestore.createId();
+    return this.firestore.collection('glicose').doc(id).set(registro);
   }
-
-  // Método para editar registro
+  
   editarGlicose(id: string, glicose: Glicose): Promise<void> {
-    return this.firestore.collection('glicose').doc(id).update(glicose);
+    const registroAtualizado = {
+      ...glicose,
+      dataHora: glicose.dataHora instanceof Date ? glicose.dataHora : new Date(glicose.dataHora),
+    };
+    return this.firestore.collection('glicose').doc(id).update(registroAtualizado);
   }
 
-  // Método para excluir registro
   excluirGlicose(id: string): Promise<void> {
     return this.firestore.collection('glicose').doc(id).delete();
   }

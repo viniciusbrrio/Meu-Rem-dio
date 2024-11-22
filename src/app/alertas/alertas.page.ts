@@ -10,7 +10,7 @@ interface Alerta {
   horario: Date;
   medicamentoId: string;
   nomeMedicamento: string;
-  diasSemana: { [key: string]: boolean }; // Alterado para um objeto
+  diasSemana: { [key: string]: boolean };
 }
 
 @Component({
@@ -80,29 +80,30 @@ export class AlertasPage implements OnInit {
           handler: async (data) => {
             const horarioString = data.hora;
             const nomeMedicamento = data.medicamento;
-  
+
             if (horarioString && /^([0-1]\d|2[0-3]):([0-5]\d)$/.test(horarioString)) {
               const [hours, minutes] = horarioString.split(':').map(Number);
               const horario = new Date();
               horario.setHours(hours, minutes, 0, 0);
-  
+
               // Obter os dias selecionados em um objeto
               const diasSemana = this.diasDaSemana.reduce((acc, dia) => {
                 acc[dia] = !!data[`dia-${dia}`];
                 return acc;
               }, {} as { [key: string]: boolean });
-  
+
               // Verificar se pelo menos um dia foi selecionado
               if (!Object.values(diasSemana).some(valor => valor)) {
                 await this.showAlert('Erro', 'Selecione pelo menos um dia da semana.');
                 return false;
               }
-  
+
               const alertaId = Date.now();
               const alerta: Alerta = { id: alertaId, horario, medicamentoId: this.medicamentoId, nomeMedicamento, diasSemana };
-  
+
               this.alertas.push(alerta);
               await this.salvarAlertas();
+              await this.agendarNotificacao(alerta);
               return true;
             } else {
               await this.showAlert('Erro', 'Horário inválido. Por favor, insira no formato HH:MM.');
@@ -112,19 +113,59 @@ export class AlertasPage implements OnInit {
         }
       ]
     });
-  
+
     await alert.present();
+  }
+
+  async agendarNotificacao(alerta: Alerta) {
+    await LocalNotifications.requestPermissions();
+
+    // Agendar notificações para os dias da semana selecionados
+    for (const [dia, ativo] of Object.entries(alerta.diasSemana)) {
+      if (ativo) {
+        const diaIndex = this.diasDaSemana.indexOf(dia);
+        const agora = new Date();
+        const horario = new Date(alerta.horario);
+        let proximaData = new Date();
+
+        proximaData.setHours(horario.getHours(), horario.getMinutes(), 0, 0);
+        proximaData.setDate(
+          agora.getDate() + ((diaIndex - agora.getDay() + 7) % 7)
+        );
+
+        // Garantir que não agende para o passado
+        if (proximaData < agora) {
+          proximaData.setDate(proximaData.getDate() + 7);
+        }
+
+        await LocalNotifications.schedule({
+          notifications: [
+            {
+              id: alerta.id + diaIndex, // ID único por dia
+              title: `Hora de tomar ${alerta.nomeMedicamento}`,
+              body: `Lembre-se de tomar seu medicamento: ${alerta.nomeMedicamento}`,
+              schedule: { at: proximaData, repeats: true, every: 'week' },
+              smallIcon: 'ic_stat_icon',
+            }
+          ]
+        });
+      }
+    }
   }
 
   getDiasSelecionados(alerta: Alerta): string[] {
     return Object.keys(alerta.diasSemana)
       .filter(dia => alerta.diasSemana[dia]); // Retorna apenas os dias que foram selecionados
   }
-  
 
   async removerAlerta(alerta: Alerta) {
     this.alertas = this.alertas.filter(a => a.id !== alerta.id);
     await this.salvarAlertas();
+
+    // Cancelar notificações
+    const ids = Object.keys(alerta.diasSemana)
+      .map((dia, index) => alerta.id + index);
+    await LocalNotifications.cancel({ notifications: ids.map(id => ({ id })) });
   }
 
   async showAlert(header: string, message: string) {
@@ -136,3 +177,4 @@ export class AlertasPage implements OnInit {
     await alert.present();
   }
 }
+

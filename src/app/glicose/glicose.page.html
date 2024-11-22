@@ -43,15 +43,16 @@
 
     <ion-tab tab="glicose">
     <ion-content>
-      <!-- Barra de pesquisa -->
+  
       <ion-searchbar (ionInput)="filtrarAnotacoes($event)" placeholder="Pesquisar"></ion-searchbar>
   
-      <!-- Lista de medições de glicose -->
+     
       <div #pdfContent>
         <ion-list>
           <ion-item *ngFor="let nota of glicoseFiltradas">
             <ion-label>
-              <h2>{{ formatarDataHora(nota.dataHora) | date:'dd/MM/yyyy - HH:mm' }}</h2>
+              <!-- Formatação para data e hora -->
+              <h2>{{ nota.dataHora | date: 'dd/MM/yyyy - HH:mm' }}</h2>
               <p>{{ nota.conteudo }}</p>
             </ion-label>
             <ion-buttons slot="end">

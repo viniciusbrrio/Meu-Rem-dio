@@ -51,16 +51,18 @@
           <ion-list>
             <ion-item *ngFor="let nota of pressaoFiltradas">
               <ion-label>
-                <h2>{{ formatarDataHora(nota.dataHora) | date:'dd/MM/yyyy - HH:mm'}}</h2>
-                <p>Sístole (max): {{ nota.sistole }}</p>
-                <p>Diástole (min): {{ nota.diastole }}</p>
+                <!-- Exibição formatada de data e hora -->
+                <h2>{{ nota.dataHora | date: 'dd/MM/yyyy - HH:mm' }}</h2>
+                <p>Sístole (máx): {{ nota.sistole }}</p>
+                <p>Diástole (mín): {{ nota.diastole }}</p>
               </ion-label>
               <ion-buttons slot="end">
                 <ion-button (click)="editarNota(nota)">Editar</ion-button>
-                <ion-button color="danger" (click)="excluiNota(nota)">Excluir</ion-button>
+                <ion-button color="danger" (click)="excluirNota(nota)">Excluir</ion-button>
               </ion-buttons>
             </ion-item>
           </ion-list>
+          
         </div>
       </ion-content>
       </ion-tab>
